@@ -1,4 +1,4 @@
-﻿#define TCPServerVersion // MxComponentVersion
+﻿#define TCPServerVersion // MxComponentVersion or TCPServerVersion
 
 using System;
 using System.Collections;
@@ -193,7 +193,7 @@ namespace MPS
                 if (TCPClient.Instance.dDevices.Length == 0) return;
 
                 print(TCPClient.Instance.dDevices);
-                print(Convert.ToInt32(TCPClient.Instance.dDevices, 2));
+                //print(Convert.ToInt32(TCPClient.Instance.dDevices, 2));
 #endif
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -52,7 +53,7 @@ namespace Server
                     {
                         // 4. UTF8 형식으로 인코딩
                         message = Encoding.UTF8.GetString(buffer, 0, nByte);
-                        Console.WriteLine("클라이언트: " + message);
+                        Console.WriteLine($"{DateTime.Now} 클라이언트: " + message);
 
                         if (message == "Disconnect&Quit")
                         {
@@ -95,7 +96,6 @@ namespace Server
                 {
                     Console.WriteLine(ex.ToString());
                 }
-
             }
             // 연결 종료
             stream.Close();
@@ -114,7 +114,12 @@ namespace Server
             int j = 0;
             for(int i = 3; i < strArray.Length; i++)
             {
-                data[j] = int.Parse(strArray[i]);
+                int value;
+                bool isCorrect = int.TryParse(strArray[i], out value);
+
+                if(!isCorrect) return $"문자열 이상";
+
+                data[j] = value;
                 j++;
             }
 
@@ -129,8 +134,8 @@ namespace Server
                 string hexValue = Convert.ToString(iRet, 16);
                 return $"에러가 발생하였습니다. 에러코드: {hexValue}";
             }
-
         }
+        
 
         static public string Connect()
         {

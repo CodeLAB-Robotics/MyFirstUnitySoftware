@@ -5,6 +5,9 @@ using System.IO;
 using System.Text;
 using TMPro;
 using System.Collections;
+using UnityEngine.Windows;
+using System.Threading.Tasks;
+using System.Threading;
 
 public class TCPClient : MonoBehaviour
 {
@@ -52,6 +55,8 @@ public class TCPClient : MonoBehaviour
         
     }
 
+    CancellationTokenSource cts;
+    Task t;
     public void OnConnectBtnClkEvent()
     {
         msg = Request("Connect"); // CONNECTED 일 경우 OK
@@ -59,6 +64,12 @@ public class TCPClient : MonoBehaviour
         if(msg == "CONNECTED")
         {
             isConnected = true;
+
+            //cts = new CancellationTokenSource();
+            //CancellationToken token = cts.Token;
+
+            //if (isConnected)
+            //    t = Task.Run(() => RequestAsync(), token);
 
             StartCoroutine(CoRequest());
         }
@@ -68,12 +79,19 @@ public class TCPClient : MonoBehaviour
     {
         msg = Request("Disconnect"); // DISCONNECTED 일 경우 OK
 
-        if( msg == "DISCONNECTED" )
+        //if( msg == "DISCONNECTED" )
         {
             isConnected = false;
+
+            if (!isConnected)
+            {
+                if(t != null && cts != null)
+                    cts.Cancel();
+            }
         }
     }
 
+    int i = 0;
     IEnumerator CoRequest()
     {
         while(isConnected)
@@ -82,17 +100,19 @@ public class TCPClient : MonoBehaviour
 
             // 2. PLC의 Y 디바이스 정보를 2진수 형태로 받는다.
 
-            string returnValue = WriteDevices("X0", 1, xDevices);
-            print(returnValue);
             //string data = Request("temp"); // GET,X0,1 / SET,X0,128
 
             yield return new WaitForSeconds(interval);
+
+            string returnValue = WriteDevices("X0", 1, xDevices);
         }
     }
 
     string totalMsg;
     public string WriteDevices(string deviceName, int blockSize, string data)
     {
+        totalMsg = "";
+
         // data = "1101010001000000" or "110101000100000011010100010000001101010001000000" -> 555
         int[] convertedData = new int[blockSize];
 
@@ -108,17 +128,18 @@ public class TCPClient : MonoBehaviour
             }
         }
 
-        // 128,64,266,
+        // 128,64,266
         foreach(var d in convertedData)
         {
-            totalMsg += d + ",";
+            totalMsg += "," + d;
         }
 
         // Server로 데이터 전송
-        string returnValue = Request($"{deviceName},{blockSize},{data},{totalMsg}"); // SET,X0,3,128,64,266
-
+        print($"SET,{deviceName},{blockSize}{totalMsg}");
+        string returnValue = Request($"SET,{deviceName},{blockSize}{totalMsg}"); // SET,X0,3,128,64,266
         return returnValue;
     }
+
 
     public static string Reverse(string input)
     {
@@ -148,10 +169,37 @@ public class TCPClient : MonoBehaviour
         byte[] buffer = new byte[1024];
         int bytesRead = stream.Read(buffer, 0, buffer.Length);
         string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-        Console.WriteLine("서버: " + response);
+        print("서버: " + response);
 
         return response;
     }
+
+    private async Task RequestAsync()
+    {
+        while (isConnected)
+        {
+            try
+            {
+                WriteDevices("X0", 1, xDevices);
+
+                byte[] buffer = Encoding.UTF8.GetBytes(xDevices);
+
+                // NetworkStream에 데이터 쓰기
+                await stream.WriteAsync(buffer, 0, buffer.Length);
+
+                // 데이터 수신(i.g GET,Y0,5)
+                byte[] buffer2 = new byte[1024];
+                int nBytes = await stream.ReadAsync(buffer2, 0, buffer2.Length);
+                string msg = Encoding.UTF8.GetString(buffer2, 0, nBytes);
+                print(msg);
+            }
+            catch (Exception e)
+            {
+                print(e.ToString());
+            }
+        }
+    }
+
 
     private void OnDestroy()
     {
