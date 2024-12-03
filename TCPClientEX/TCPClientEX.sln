@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPClientEX", "TCPClientEX\TCPClientEX.csproj", "{B42873EB-69C4-43D0-BB05-ED9CAE4531CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B42873EB-69C4-43D0-BB05-ED9CAE4531CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B42873EB-69C4-43D0-BB05-ED9CAE4531CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B42873EB-69C4-43D0-BB05-ED9CAE4531CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B42873EB-69C4-43D0-BB05-ED9CAE4531CC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D3E92307-C874-4787-A5A8-AA231F573C6D}
+	EndGlobalSection
+EndGlobal
