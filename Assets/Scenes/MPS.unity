@@ -7473,6 +7473,8 @@ MonoBehaviour:
   backwardLS: {fileID: 7032594}
   isForward: 0
   isRodMoving: 0
+  isForwardLSOn: 0
+  isBackwardLSOn: 0
 --- !u!1 &436012569
 GameObject:
   m_ObjectHideFlags: 0
@@ -9917,6 +9919,8 @@ MonoBehaviour:
   backwardLS: {fileID: 1469911754}
   isForward: 0
   isRodMoving: 0
+  isForwardLSOn: 0
+  isBackwardLSOn: 0
 --- !u!1 &599176694
 GameObject:
   m_ObjectHideFlags: 0
@@ -13599,6 +13603,8 @@ MonoBehaviour:
   backwardLS: {fileID: 1641501793}
   isForward: 0
   isRodMoving: 0
+  isForwardLSOn: 0
+  isBackwardLSOn: 0
 --- !u!1 &834466484
 GameObject:
   m_ObjectHideFlags: 0
@@ -31003,6 +31009,8 @@ MonoBehaviour:
   backwardLS: {fileID: 1011580444}
   isForward: 0
   isRodMoving: 0
+  isForwardLSOn: 0
+  isBackwardLSOn: 0
 --- !u!1 &2003768410
 GameObject:
   m_ObjectHideFlags: 0

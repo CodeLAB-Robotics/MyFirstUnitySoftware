@@ -71,8 +71,9 @@ public class MxComponent : MonoBehaviour
         {
             WriteDevices("X0", 1, xDevices); // Unity -> PLC : Unity 입력 디바이스(x device)들의 정보를 PLC로 전송
             yDevices = ReadDevices("Y0", 2); // PLC -> Unity : PLC의 출력 디바이스(y device)들의 정보를 PC로 전송
+            dDevices = ReadDevices("D0", 1); // 55 or 100
 
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.15f);
         }
     }
 
@@ -164,20 +165,29 @@ public class MxComponent : MonoBehaviour
 
             foreach (int d in data)
             {
-                string input = Convert.ToString(d, 2);
-                string reversed = Reverse(input);
+                string input = Convert.ToString(d, 2); // D 디바이스: 10진수, 데이터 처리를 위해 사용
+                                                       // (생산된 물건의 개수, 생산해야 할 물건의 남은 개수, 불량의 개수)
+                                                       // 데이터 예시: 55, 100
+                                                       // X, Y 디바이스: 2진수, 비트 단위로 사용
+                                                       // 비트 단위 데이터 예시: 1011010, xDevice[0] = 1
 
-                // x[33] = 0 -> x[3][3]
-                if (16 - reversed.Length > 0) // 1101010001 -> 110101000100000 
+                if (!deviceName.Contains("D")) // deviceName = "Y0", "X0"
                 {
-                    int countZero = 16 - reversed.Length;
-                    for (int i = 0; i < countZero; i++)
+                    input = Reverse(input);
+
+
+                    // x[33] = 0 -> x[3][3]
+                    if (16 - input.Length > 0) // 1101010001 -> 110101000100000 
                     {
-                        reversed += '0';
+                        int countZero = 16 - input.Length;
+                        for (int i = 0; i < countZero; i++)
+                        {
+                            input += '0';
+                        }
                     }
                 }
 
-                totalData += reversed;
+                totalData += input;
             }
 
             return totalData; // 00011001100
