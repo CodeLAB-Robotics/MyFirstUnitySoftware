@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\교수\\source\\repos\\TCPClientEX\\TCPClientEX\\TCPClientEX.csproj": {}
+    "C:\\Projects\\MyFirstUnitySoftware\\TCPClientEX\\TCPClientEX\\TCPClientEX.csproj": {}
   },
   "projects": {
-    "C:\\Users\\교수\\source\\repos\\TCPClientEX\\TCPClientEX\\TCPClientEX.csproj": {
+    "C:\\Projects\\MyFirstUnitySoftware\\TCPClientEX\\TCPClientEX\\TCPClientEX.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\교수\\source\\repos\\TCPClientEX\\TCPClientEX\\TCPClientEX.csproj",
+        "projectUniqueName": "C:\\Projects\\MyFirstUnitySoftware\\TCPClientEX\\TCPClientEX\\TCPClientEX.csproj",
         "projectName": "TCPClientEX",
-        "projectPath": "C:\\Users\\교수\\source\\repos\\TCPClientEX\\TCPClientEX\\TCPClientEX.csproj",
+        "projectPath": "C:\\Projects\\MyFirstUnitySoftware\\TCPClientEX\\TCPClientEX\\TCPClientEX.csproj",
         "packagesPath": "C:\\Users\\교수\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\교수\\source\\repos\\TCPClientEX\\TCPClientEX\\obj\\",
+        "outputPath": "C:\\Projects\\MyFirstUnitySoftware\\TCPClientEX\\TCPClientEX\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
