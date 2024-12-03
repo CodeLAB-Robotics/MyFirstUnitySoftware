@@ -36,6 +36,16 @@ public class TCPClient : MonoBehaviour
         
     }
 
+    public void OnConnectBtnClkEvent()
+    {
+        Request("Connect");
+    }
+
+    public void OnDisconnectBtnClkEvent()
+    {
+        Request("Disconnect");
+    }
+
     public void Request()
     {
         byte[] dataBytes = Encoding.UTF8.GetBytes(dataInput.text);
@@ -48,7 +58,7 @@ public class TCPClient : MonoBehaviour
         Console.WriteLine("서버: " + response);
     }
 
-    public void Request(string message)
+    public string Request(string message)
     {
         byte[] dataBytes = Encoding.UTF8.GetBytes(message);
         stream.Write(dataBytes, 0, dataBytes.Length);
@@ -58,5 +68,7 @@ public class TCPClient : MonoBehaviour
         int bytesRead = stream.Read(buffer, 0, buffer.Length);
         string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
         Console.WriteLine("서버: " + response);
+
+        return response;
     }
 }

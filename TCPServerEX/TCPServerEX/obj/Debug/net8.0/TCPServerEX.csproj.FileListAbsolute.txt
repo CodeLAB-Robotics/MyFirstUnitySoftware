@@ -27,3 +27,5 @@ C:\Projects\MyFirstUnitySoftware\TCPServerEX\TCPServerEX\obj\Debug\net8.0\refint
 C:\Projects\MyFirstUnitySoftware\TCPServerEX\TCPServerEX\obj\Debug\net8.0\TCPServerEX.pdb
 C:\Projects\MyFirstUnitySoftware\TCPServerEX\TCPServerEX\obj\Debug\net8.0\TCPServerEX.genruntimeconfig.cache
 C:\Projects\MyFirstUnitySoftware\TCPServerEX\TCPServerEX\obj\Debug\net8.0\ref\TCPServerEX.dll
+C:\Projects\MyFirstUnitySoftware\TCPServerEX\TCPServerEX\obj\Debug\net8.0\Interop.ActUtlType64Lib.dll
+C:\Projects\MyFirstUnitySoftware\TCPServerEX\TCPServerEX\obj\Debug\net8.0\TCPServerEX.csproj.ResolveComReference.cache

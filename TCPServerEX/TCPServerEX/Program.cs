@@ -43,6 +43,7 @@ namespace Server
 
                 int nByte;
                 string messge = "";
+                string msgToClient = "";
 
                 try
                 {
@@ -53,16 +54,24 @@ namespace Server
                         messge = Encoding.UTF8.GetString(buffer, 0, nByte);
                         Console.WriteLine("클라이언트: " + messge);
 
-                        // 클라이언트에 데이터 보내기
-                        buffer = new byte[1024]; // 버퍼 초기화
-                        buffer = Encoding.UTF8.GetBytes("SERVER TEST");
-                        stream.Write(buffer, 0, buffer.Length);
-
                         if (messge.Contains("Quit"))
                         {
                             Console.WriteLine("서버를 종료합니다.");
                             break;
                         }
+                        else if(messge.Contains("Connect"))
+                        {
+                            msgToClient = Connect();
+                        }
+                        else if(messge.Contains("Disconnect"))
+                        {
+                            msgToClient = Disconnect();
+                        }
+
+                        // 4. 클라이언트에 데이터 보내기
+                        buffer = new byte[1024]; // 버퍼 초기화
+                        buffer = Encoding.UTF8.GetBytes(msgToClient);
+                        stream.Write(buffer, 0, buffer.Length);
                     }
 
                     if (messge.Contains("Quit"))
@@ -82,9 +91,10 @@ namespace Server
             client.Close();
         }
 
-        static public void Connect()
+        static public string Connect()
         {
-            if (state == State.CONNECTED) return;
+            if (state == State.CONNECTED) 
+                return "이미 연결되어 있습니다.";
 
             int returnValue = mxComponent.Open();
 
@@ -94,17 +104,22 @@ namespace Server
                 state = State.CONNECTED;
 
                 Console.WriteLine("Simulator와 연결이 잘 되었습니다.");
+
+                return "CONNECTED";
             }
             else
             {
                 string hexValue = Convert.ToString(returnValue, 16);
                 Console.WriteLine($"에러코드를 확인해 주세요. 에러코드: {hexValue}");
+
+                return $"에러코드를 확인해 주세요. 에러코드: {hexValue}";
             }
         }
 
-        static public void DisConnect()
+        static public string Disconnect()
         {
-            if (state == State.DISCONNECTED) return;
+            if (state == State.DISCONNECTED) 
+                return "연결해제 상태입니다.";
 
             int returnValue = mxComponent.Close();
 
@@ -114,11 +129,15 @@ namespace Server
                 state = State.DISCONNECTED;
 
                 Console.WriteLine("Simulator와 연결이 해제되었습니다.");
+
+                return "DISCONNECTED";
             }
             else
             {
                 string hexValue = Convert.ToString(returnValue, 16);
                 Console.WriteLine($"에러코드를 확인해 주세요. 에러코드: {hexValue}");
+
+                return $"에러코드를 확인해 주세요. 에러코드: {hexValue}";
             }
         }
     }
