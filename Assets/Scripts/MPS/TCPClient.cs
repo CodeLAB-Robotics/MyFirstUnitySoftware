@@ -8,6 +8,7 @@ using System.Collections;
 using UnityEngine.Windows;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections.Generic;
 
 public class TCPClient : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class TCPClient : MonoBehaviour
     TcpClient client;
     NetworkStream stream;
     string msg;
+    string totalMsg;
 
     private void Awake()
     {
@@ -47,12 +49,6 @@ public class TCPClient : MonoBehaviour
             print(ex);
             print("서버를 먼저 작동시켜 주세요.");
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     CancellationTokenSource cts;
@@ -91,7 +87,6 @@ public class TCPClient : MonoBehaviour
         }
     }
 
-    int i = 0;
     IEnumerator CoRequest()
     {
         while(isConnected)
@@ -100,20 +95,23 @@ public class TCPClient : MonoBehaviour
 
             yield return new WaitForSeconds(interval);
 
-
-            // SET,X0,128,GET,Y0,2,GET,D0,3
-
-
+            // SET,X0,128,GET,Y0,2,GET,D0,3 -> 서버로 전송 -> WriteDeviceBlock 1번, ReadDeviceBlock 1번
+            
             // 1. MPS의 X 디바이스 정보를 정수형으로 전달한다.
-            string returnValue = WriteDevices("X0", 1, xDevices); // SET,X0,128
+            //string returnValue = WriteDevices("X0", 1, xDevices); // SET,X0,128
 
             // 2. PLC의 Y, D 디바이스 정보를 2진수 형태로 받는다.
-            yDevices = ReadDevices("Y0", 2); //  GET,Y0,2
-            dDevices = ReadDevices("D0", 1); //  GET,D0,1
+            //yDevices = ReadDevices("Y0", 2); //  GET,Y0,2
+            //dDevices = ReadDevices("D0", 1); //  GET,D0,1
+
+
+            // 3. 통합: 서버에서 데이터를 주고 받은 후 원하는 데이터만 받기
+            // (Unity to Server 데이터 형식: SET,X0,3,128,24,1/GET,Y0,2/GET,D0,3)
+            // (Server to Unity 데이터 형식: X0,123,24/D0,23
+            Request($"SET,X0,1,{xDevices}/GET,Y0,2/GET,D0,1");
         }
     }
 
-    string totalMsg;
     public string WriteDevices(string deviceName, int blockSize, string data)
     {
         totalMsg = "";

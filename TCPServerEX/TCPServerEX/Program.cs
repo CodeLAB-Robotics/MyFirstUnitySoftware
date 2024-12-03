@@ -17,7 +17,7 @@ namespace Server
         static ActUtlType64 mxComponent;
         static State state = State.DISCONNECTED;
 
-        static void Main(string[] args)
+        static void Main2(string[] args)
         {
             mxComponent = new ActUtlType64();
             mxComponent.ActLogicalStationNumber = 1;
@@ -172,7 +172,37 @@ namespace Server
                 return $"에러가 발생하였습니다. 에러코드: {hexValue}";
             }
         }
-        
+
+        // 통합: 서버에서 데이터를 주고 받은 후 원하는 데이터만 받기
+        // (Unity to Server 데이터 형식: SET,X0,3,128,24,1/GET,Y0,2/GET,D0,3)
+        // (Server to Unity 데이터 형식: X0,123,24/D0,23
+        static string ReadAndWriteDevices(string message)
+        {
+            List<string[]> commands = SplitCommands(message);
+
+            ReadXDevice(commands[0]);
+
+            return "result";
+
+            List<string[]> SplitCommands(string input)
+            {
+                string[] commands = input.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                List<string[]> commandList = new List<string[]>();
+                foreach (string command in commands)
+                {
+                    string[] commands2nd = command.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    commandList.Add(commands2nd);
+                }
+
+                return commandList;
+            }
+        }
+
+        private static void ReadXDevice(string[] strings)
+        {
+            throw new NotImplementedException();
+        }
 
         static public string Connect()
         {
