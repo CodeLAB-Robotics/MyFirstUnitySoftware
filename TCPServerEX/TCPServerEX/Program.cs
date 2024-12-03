@@ -42,7 +42,7 @@ namespace Server
                 stream = client.GetStream();
 
                 int nByte;
-                string messge = "";
+                string message = "";
                 string msgToClient = "";
 
                 try
@@ -51,21 +51,32 @@ namespace Server
                     while ((nByte = stream.Read(buffer, 0, buffer.Length)) > 0)
                     {
                         // 4. UTF8 형식으로 인코딩
-                        messge = Encoding.UTF8.GetString(buffer, 0, nByte);
-                        Console.WriteLine("클라이언트: " + messge);
+                        message = Encoding.UTF8.GetString(buffer, 0, nByte);
+                        Console.WriteLine("클라이언트: " + message);
 
-                        if (messge.Contains("Quit"))
+                        if (message == "Disconnect&Quit")
                         {
+                            msgToClient = Disconnect();
                             Console.WriteLine("서버를 종료합니다.");
                             break;
                         }
-                        else if(messge.Contains("Connect"))
+                        else if(message == "Connect")
                         {
                             msgToClient = Connect();
                         }
-                        else if(messge.Contains("Disconnect"))
+                        else if(message == "Disconnect")
                         {
                             msgToClient = Disconnect();
+                        }
+                        else if(message.Contains("SET"))
+                        {
+                            // SET,X0,3,128,64,266
+                            msgToClient = WriteDevices(message);
+                        }
+                        else if(message.Contains("GET"))
+                        {
+                            // GET,X0,3
+                            // ReadDeviceBlock
                         }
 
                         // 4. 클라이언트에 데이터 보내기
@@ -74,7 +85,7 @@ namespace Server
                         stream.Write(buffer, 0, buffer.Length);
                     }
 
-                    if (messge.Contains("Quit"))
+                    if (message.Contains("Quit"))
                     {
                         Console.WriteLine("서버를 종료합니다.");
                         break;
@@ -89,6 +100,36 @@ namespace Server
             // 연결 종료
             stream.Close();
             client.Close();
+        }
+
+        private static string WriteDevices(string message)
+        {
+            // SET,X0,3,128,64,266
+            string[] strArray = message.Split(',');
+
+            string deviceName = strArray[1];        // X0
+            int blockSize = int.Parse(strArray[2]); // 3
+            int[] data = new int[blockSize];        // 128,64,266
+
+            int j = 0;
+            for(int i = 3; i < strArray.Length; i++)
+            {
+                data[j] = int.Parse(strArray[i]);
+                j++;
+            }
+
+            int iRet = mxComponent.WriteDeviceBlock(deviceName, blockSize, data[0]);
+
+            if (iRet == 0)
+            {
+                return "데이터 전송 완료(Server -> MxComponent)";
+            }
+            else
+            {
+                string hexValue = Convert.ToString(iRet, 16);
+                return $"에러가 발생하였습니다. 에러코드: {hexValue}";
+            }
+
         }
 
         static public string Connect()
