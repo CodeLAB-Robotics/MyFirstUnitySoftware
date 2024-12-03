@@ -78,6 +78,7 @@ namespace Server
                         {
                             // GET,X0,3
                             // ReadDeviceBlock
+                            msgToClient = ReadDevices(message);
                         }
 
                         // 4. 클라이언트에 데이터 보내기
@@ -100,6 +101,42 @@ namespace Server
             // 연결 종료
             stream.Close();
             client.Close();
+        }
+
+        private static string ReadDevices(string message)
+        {
+            // GET,X0,1;
+            string[] strArray = message.Split(',');
+
+            if(strArray.Length == 3)
+            {
+                string deviceName = strArray[1];        // X0
+                int blockSize = int.Parse(strArray[2]); // 3
+
+                int[] data = new int[blockSize];
+                int iRet = mxComponent.ReadDeviceBlock(deviceName, blockSize, out data[0]);
+
+                // int[] 35,22 -> Byte 01110010
+                if (iRet == 0)
+                {
+                    Console.WriteLine("데이터 전송 완료(Server -> MxComponent)");
+
+                    // int[] data = {32, 22} -> string d = "3222"
+                    string convertedData = String.Join(",", data); // "32,22"
+
+                    return convertedData;
+                }
+                else
+                {
+                    string hexValue = Convert.ToString(iRet, 16);
+                    return $"에러가 발생하였습니다. 에러코드: {hexValue}";
+                }
+            }
+            else
+            {
+                return "데이터 이상";
+            }
+            
         }
 
         private static string WriteDevices(string message)

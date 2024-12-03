@@ -96,15 +96,20 @@ public class TCPClient : MonoBehaviour
     {
         while(isConnected)
         {
-            // 1. MPS의 X 디바이스 정보를 정수형으로 전달한다.
-
-            // 2. PLC의 Y 디바이스 정보를 2진수 형태로 받는다.
-
             //string data = Request("temp"); // GET,X0,1 / SET,X0,128
 
             yield return new WaitForSeconds(interval);
 
-            string returnValue = WriteDevices("X0", 1, xDevices);
+
+            // SET,X0,128,GET,Y0,2,GET,D0,3
+
+
+            // 1. MPS의 X 디바이스 정보를 정수형으로 전달한다.
+            string returnValue = WriteDevices("X0", 1, xDevices); // SET,X0,128
+
+            // 2. PLC의 Y, D 디바이스 정보를 2진수 형태로 받는다.
+            yDevices = ReadDevices("Y0", 2); //  GET,Y0,2
+            dDevices = ReadDevices("D0", 1); //  GET,D0,1
         }
     }
 
@@ -140,6 +145,53 @@ public class TCPClient : MonoBehaviour
         return returnValue;
     }
 
+    public string ReadDevices(string deviceName, int blockSize)
+    {
+        // 33,22
+        string returnValue = Request($"GET,{deviceName},{blockSize}"); // GET,X0,3
+        
+        int[] data = new int[blockSize];
+        string totalData = "";
+
+        if (returnValue != "에러코드")
+        {
+            print("디바이스 블록 읽기가 완료되었습니다.");
+
+            data = returnValue.ToIntArray(); // { 33, 22 }
+
+            foreach (int d in data)
+            {
+                string input = Convert.ToString(d, 2); // D 디바이스: 10진수, 데이터 처리를 위해 사용
+                                                       // (생산된 물건의 개수, 생산해야 할 물건의 남은 개수, 불량의 개수)
+                                                       // 데이터 예시: 55, 100
+                                                       // X, Y 디바이스: 2진수, 비트 단위로 사용
+                                                       // 비트 단위 데이터 예시: 1011010, xDevice[0] = 1
+
+                if (!deviceName.Contains("D")) // deviceName = "Y0", "X0"
+                {
+                    input = Reverse(input);
+
+                    // x[33] = 0 -> x[3][3]
+                    if (16 - input.Length > 0) // 1101010001 -> 110101000100000 
+                    {
+                        int countZero = 16 - input.Length;
+                        for (int i = 0; i < countZero; i++)
+                        {
+                            input += '0';
+                        }
+                    }
+                }
+
+                totalData += input;
+            }
+
+            return totalData; // 00011001100
+        }
+        else
+        {
+            return returnValue;
+        }
+    }
 
     public static string Reverse(string input)
     {
