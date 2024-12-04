@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -6,10 +6,10 @@ using System;
 using System.Collections;
 
 /// <summary>
-/// ·Îº¿ 3D Object¸¦ RobotControllerÀÇ ¹öÆ°, ÀÎÇ²ÇÊµåÀÇ °ªÀ¸·Î ¿òÁ÷ÀÎ´Ù.
-/// - Teach ¹öÆ°À» ´©¸£¸é °¢ AxisÀÇ °ªÀÌ StepÀ¸·Î ÀúÀåµÈ´Ù.
-/// - SingleCycle, Cycle, Stop, E-Stop ¹öÆ°À» ´©¸£¸é ·Îº¿ÀÌ µ¿ÀÛÇÑ´Ù.
-/// ÇÊ¿ä¼Ó¼º: ·Îº¿ÀÇ ¸ğÅÍ È¸Àü ¼Óµµ(0~100), Duration, Min Angle, Max Angle
+/// ë¡œë´‡ 3D Objectë¥¼ RobotControllerì˜ ë²„íŠ¼, ì¸í’‹í•„ë“œì˜ ê°’ìœ¼ë¡œ ì›€ì§ì¸ë‹¤.
+/// - Teach ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ê° Axisì˜ ê°’ì´ Stepìœ¼ë¡œ ì €ì¥ëœë‹¤.
+/// - SingleCycle, Cycle, Stop, E-Stop ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ë¡œë´‡ì´ ë™ì‘í•œë‹¤.
+/// í•„ìš”ì†ì„±: ë¡œë´‡ì˜ ëª¨í„° íšŒì „ ì†ë„(0~100), Duration, Min Angle, Max Angle
 ///          step(speed, duration, suction, angles)
 /// </summary>
 public class RobotController : MonoBehaviour
@@ -59,7 +59,7 @@ public class RobotController : MonoBehaviour
     [SerializeField] Transform motorAxis4;
     [SerializeField] Transform motorAxis5;
 
-    [Header("UI Á¤¸®")]
+    [Header("UI ì •ë¦¬")]
     [SerializeField] TMP_Text nowStepInfoTxt;
     [SerializeField] int totalSteps;
     [SerializeField] int currentStepNumber;
@@ -90,14 +90,14 @@ public class RobotController : MonoBehaviour
         angleAxis5Input.text = "0";
     }
 
-    // Teach ¹öÆ°À» ´©¸£¸é °¢ AxisÀÇ °ªÀÌ StepÀ¸·Î ÀúÀåµÈ´Ù.
+    // Teach ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ê° Axisì˜ ê°’ì´ Stepìœ¼ë¡œ ì €ì¥ëœë‹¤.
     public void OnTeachBtnClkEvent()
     {
         //int stepNumber;
         //bool isCorrect = int.TryParse(stepInput.text, out stepNumber);
         //if (!isCorrect)
         //{
-        //    print("¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+        //    print("ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
         //    return;
         //}
 
@@ -105,7 +105,7 @@ public class RobotController : MonoBehaviour
         bool isCorrect = float.TryParse(speedInput.text, out speed);
         if (!isCorrect)
         {
-            print("¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+            print("ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -113,7 +113,7 @@ public class RobotController : MonoBehaviour
         isCorrect = float.TryParse(durationInput.text, out duration);
         if (!isCorrect)
         {
-            print("¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+            print("ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -121,7 +121,7 @@ public class RobotController : MonoBehaviour
         isCorrect = float.TryParse(angleAxis1Input.text, out angleAxis1);
         if (!isCorrect)
         {
-            print("¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+            print("ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -129,7 +129,7 @@ public class RobotController : MonoBehaviour
         isCorrect = float.TryParse(angleAxis2Input.text, out angleAxis2);
         if (!isCorrect)
         {
-            print("¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+            print("ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -137,7 +137,7 @@ public class RobotController : MonoBehaviour
         isCorrect = float.TryParse(angleAxis3Input.text, out angleAxis3);
         if (!isCorrect)
         {
-            print("¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+            print("ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -145,7 +145,7 @@ public class RobotController : MonoBehaviour
         isCorrect = float.TryParse(angleAxis4Input.text, out angleAxis4);
         if (!isCorrect)
         {
-            print("¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+            print("ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -153,7 +153,7 @@ public class RobotController : MonoBehaviour
         isCorrect = float.TryParse(angleAxis5Input.text, out angleAxis5);
         if (!isCorrect)
         {
-            print("¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+            print("ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -170,10 +170,10 @@ public class RobotController : MonoBehaviour
         totalSteps++;
         stepInput.text = totalSteps.ToString();
         nowStepInfoTxt.text = $"Total step count: {totalSteps} / Current step: {currentStepNumber}";
-        print("StepÀÌ Ãß°¡µÇ¾ú½À´Ï´Ù.");
+        print("Stepì´ ì¶”ê°€ë˜ì—ˆìŠµë‹ˆë‹¤.");
     }
 
-    // Clear ¹öÆ°À» ´©¸£¸é ¸ğµç StepµéÀÌ Áö¿öÁø´Ù.
+    // Clear ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ëª¨ë“  Stepë“¤ì´ ì§€ì›Œì§„ë‹¤.
     public void OnClearBtnClkEvent()
     {
         steps.Clear();
@@ -194,15 +194,15 @@ public class RobotController : MonoBehaviour
         angleAxis5Input.text = "0";
     }
 
-    // SingleCycle, Cycle, Stop, E-Stop ¹öÆ°À» ´©¸£¸é ·Îº¿ÀÌ µ¿ÀÛÇÑ´Ù.
+    // SingleCycle, Cycle, Stop, E-Stop ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ë¡œë´‡ì´ ë™ì‘í•œë‹¤.
     public void OnSingleCycleBtnClkEvent()
     {
-        // °¢ ½ºÅÇ¿¡ µû¶ó ·Îº¿ÀÇ ¸ğÅÍ°¡ ¿òÁ÷¿©¾ß ÇÑ´Ù.
+        // ê° ìŠ¤íƒ­ì— ë”°ë¼ ë¡œë´‡ì˜ ëª¨í„°ê°€ ì›€ì§ì—¬ì•¼ í•œë‹¤.
         StartCoroutine(Run());
     }
 
     /// <summary>
-    /// ÇöÀç À§Ä¡¿¡¼­ ·Îº¿ÀÇ ¿òÁ÷ÀÓÀ» ¸ØÃá´Ù. -> Ã³À½ºÎÅÍ ½ÃÀÛ
+    /// í˜„ì¬ ìœ„ì¹˜ì—ì„œ ë¡œë´‡ì˜ ì›€ì§ì„ì„ ë©ˆì¶˜ë‹¤. -> ì²˜ìŒë¶€í„° ì‹œì‘
     /// </summary>
     public void OnStopBtnClkEvent()
     {
@@ -210,7 +210,7 @@ public class RobotController : MonoBehaviour
     }
 
     /// <summary>
-    /// ÇöÀç À§Ä¡¿¡¼­ ·Îº¿ÀÇ ¿òÁ÷ÀÓÀ» ¸ØÃá´Ù. -> ÇØ´ç À§Ä¡¿¡¼­ ºÎÅÍ ´Ù½Ã ½ÃÀÛ
+    /// í˜„ì¬ ìœ„ì¹˜ì—ì„œ ë¡œë´‡ì˜ ì›€ì§ì„ì„ ë©ˆì¶˜ë‹¤. -> í•´ë‹¹ ìœ„ì¹˜ì—ì„œ ë¶€í„° ë‹¤ì‹œ ì‹œì‘
     /// </summary>
     public void OnEStopBtnClkEvent()
     {
@@ -218,7 +218,7 @@ public class RobotController : MonoBehaviour
     }
 
     /// <summary>
-    /// ·Îº¿ÀÌ ÃÖ±Ù À§Ä¡¿¡¼­ ºÎÅÍ Ã³À½ À§Ä¡·Î ÀÌµ¿
+    /// ë¡œë´‡ì´ ìµœê·¼ ìœ„ì¹˜ì—ì„œ ë¶€í„° ì²˜ìŒ ìœ„ì¹˜ë¡œ ì´ë™
     /// </summary>
     public void OnOriginBtnClkEvent()
     {
@@ -229,7 +229,7 @@ public class RobotController : MonoBehaviour
     {
         if (steps.Count > 0)
         {
-            for (int i = 0; i < steps.Count; i++) // 2°³: 0, 1, ?
+            for (int i = 0; i < steps.Count; i++) // 2ê°œ: 0, 1, ?
             {
                 currentStepNumber = i;
                 nowStepInfoTxt.text = $"Total step count: {totalSteps} / Current step: {currentStepNumber}";
@@ -246,19 +246,19 @@ public class RobotController : MonoBehaviour
 
     IEnumerator RunStep(Step prevStep, Step nextStep)
     {
-        Vector3 prevAxis1Euler  = new Vector3(0, prevStep.angleAxis1, 0); // Axis1: YÃà ±âÁØÀ¸·Î È¸Àü
+        Vector3 prevAxis1Euler  = new Vector3(0, prevStep.angleAxis1, 0); // Axis1: Yì¶• ê¸°ì¤€ìœ¼ë¡œ íšŒì „
         Vector3 nextAxis1AEuler = new Vector3(0, nextStep.angleAxis1, 0);
 
-        Vector3 prevAxis2Euler  = new Vector3(0, 0, prevStep.angleAxis2); // Axis2: ZÃà ±âÁØÀ¸·Î È¸Àü
+        Vector3 prevAxis2Euler  = new Vector3(0, 0, prevStep.angleAxis2); // Axis2: Zì¶• ê¸°ì¤€ìœ¼ë¡œ íšŒì „
         Vector3 nextAxis2AEuler = new Vector3(0, 0, nextStep.angleAxis2);
 
-        Vector3 prevAxis3Euler  = new Vector3(0, 0, prevStep.angleAxis3); // Axis3: ZÃà ±âÁØÀ¸·Î È¸Àü
+        Vector3 prevAxis3Euler  = new Vector3(0, 0, prevStep.angleAxis3); // Axis3: Zì¶• ê¸°ì¤€ìœ¼ë¡œ íšŒì „
         Vector3 nextAxis3AEuler = new Vector3(0, 0, nextStep.angleAxis3);
 
-        Vector3 prevAxis4Euler  = new Vector3(prevStep.angleAxis4, 0, 0); // Axis4: XÃà ±âÁØÀ¸·Î È¸Àü
+        Vector3 prevAxis4Euler  = new Vector3(prevStep.angleAxis4, 0, 0); // Axis4: Xì¶• ê¸°ì¤€ìœ¼ë¡œ íšŒì „
         Vector3 nextAxis4AEuler = new Vector3(nextStep.angleAxis4, 0, 0);
 
-        Vector3 prevAxis5Euler  = new Vector3(0, 0, prevStep.angleAxis5); // Axis5: ZÃà ±âÁØÀ¸·Î È¸Àü
+        Vector3 prevAxis5Euler  = new Vector3(0, 0, prevStep.angleAxis5); // Axis5: Zì¶• ê¸°ì¤€ìœ¼ë¡œ íšŒì „
         Vector3 nextAxis5AEuler = new Vector3(0, 0, nextStep.angleAxis5);
 
         float currentTime = 0;
