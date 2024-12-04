@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\MPS\TCPClient.cs" />
     <Compile Include="Assets\Bublisher\3D Stylized Animated Dogs Kit\Scripts\AnimationButton.cs" />
     <Compile Include="Assets\Scripts\Animation\Cyborg.cs" />
+    <Compile Include="Assets\Scripts\RobotController\RobotController.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Phoenix3D\P3D_Wallpaper_Carpet_and_CurtainFabric_Materials_Pack\Scripts\MaterialSwithcer.cs" />
     <Compile Include="Assets\Phoenix3D\P3D_Wallpaper_Carpet_and_CurtainFabric_Materials_Pack\Scripts\OpenURL.cs" />

@@ -2,7 +2,7 @@
 
 class Program
 {
-    static void Main()
+    static void Main2()
     {
         List<string[]> a = new List<string[]>();
         string input = "SET,X0,3,128,24,1/GET,Y0,2/GET,D0,3";

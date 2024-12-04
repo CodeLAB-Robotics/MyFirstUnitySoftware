@@ -17,7 +17,7 @@ namespace Server
         static ActUtlType64 mxComponent;
         static State state = State.DISCONNECTED;
 
-        static void Main2(string[] args)
+        static void Main(string[] args)
         {
             mxComponent = new ActUtlType64();
             mxComponent.ActLogicalStationNumber = 1;
@@ -78,6 +78,7 @@ namespace Server
                         {
                             // GET,X0,3
                             // ReadDeviceBlock
+                            // 33,22
                             msgToClient = ReadDevices(message);
                         }
 
@@ -122,7 +123,7 @@ namespace Server
                     Console.WriteLine("데이터 전송 완료(Server -> MxComponent)");
 
                     // int[] data = {32, 22} -> string d = "3222"
-                    string convertedData = String.Join(",", data); // "32,22"
+                    string convertedData = String.Join(",", data); // "32,22", "128"
 
                     return convertedData;
                 }
