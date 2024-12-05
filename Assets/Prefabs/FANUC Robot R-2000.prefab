@@ -4705,8 +4705,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -4723,8 +4723,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5424,7 +5424,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4408012229788507619}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5042227135311427477}
+        m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+        m_MethodName: OnClearBtnClkEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4551539318167144947
 GameObject:
   m_ObjectHideFlags: 0
@@ -6410,8 +6422,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -8908,7 +8920,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5398999432042166678}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5042227135311427477}
+        m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+        m_MethodName: OnSingleCycleBtnClkEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7240658716407015898
 GameObject:
   m_ObjectHideFlags: 0
@@ -10038,8 +10062,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -10129,6 +10153,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   steps: []
+  originStep:
+    stepNumber: 0
+    speed: 0
+    duration: 0
+    isSuctionOn: 0
+    angleAxis1: 0
+    minAngleAxis1: 0
+    maxAngleAxis1: 0
+    angleAxis2: 0
+    minAngleAxis2: 0
+    maxAngleAxis2: 0
+    angleAxis3: 0
+    minAngleAxis3: 0
+    maxAngleAxis3: 0
+    angleAxis4: 0
+    minAngleAxis4: 0
+    maxAngleAxis4: 0
+    angleAxis5: 0
+    minAngleAxis5: 0
+    maxAngleAxis5: 0
+  eStopStep:
+    stepNumber: 0
+    speed: 0
+    duration: 0
+    isSuctionOn: 0
+    angleAxis1: 0
+    minAngleAxis1: 0
+    maxAngleAxis1: 0
+    angleAxis2: 0
+    minAngleAxis2: 0
+    maxAngleAxis2: 0
+    angleAxis3: 0
+    minAngleAxis3: 0
+    maxAngleAxis3: 0
+    angleAxis4: 0
+    minAngleAxis4: 0
+    maxAngleAxis4: 0
+    angleAxis5: 0
+    minAngleAxis5: 0
+    maxAngleAxis5: 0
+  isStopped: 0
+  isEStopped: 0
   motorAxis1: {fileID: 71490348723637476}
   motorAxis2: {fileID: 6364213639495537212}
   motorAxis3: {fileID: 8825852528912927061}
@@ -10136,7 +10202,7 @@ MonoBehaviour:
   motorAxis5: {fileID: 5350131419423807288}
   nowStepInfoTxt: {fileID: 1655141226280865138}
   totalSteps: 0
-  currentStep: 0
+  currentStepNumber: 0
   stepInput: {fileID: 6350312430386876979}
   speedInput: {fileID: 8168300107132999976}
   durationInput: {fileID: 4415280802107439530}
@@ -11224,4 +11290,16 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6388279995213379006}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5042227135311427477}
+        m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+        m_MethodName: OnTeachBtnClkEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

@@ -77,6 +77,8 @@ public class RobotController : MonoBehaviour
     [SerializeField] TMP_InputField angleAxis4Input;
     [SerializeField] TMP_InputField angleAxis5Input;
 
+    Coroutine currentCoroutine;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -203,8 +205,28 @@ public class RobotController : MonoBehaviour
     // SingleCycle, Cycle, Stop, E-Stop 버튼을 누르면 로봇이 동작한다.
     public void OnSingleCycleBtnClkEvent()
     {
-        // 각 스탭에 따라 로봇의 모터가 움직여야 한다.
-        StartCoroutine(Run());
+        if(isEStopped)
+        {
+            isEStopped = false;
+
+            List<Step> newSteps = new List<Step>();
+            // eStopStep -> (멈춘 당시의 스텝 인덱스 + 1) -> 마지막 스탭까지 작동
+            // E-Stop 버튼 누른 시점의 스탭(eStopStep) 부터
+            // 기존 작동중이던 남은 스탭들을 newSteps에 저장
+            for(int i = currentStepNumber; i < steps.Count; i++)
+            {
+                newSteps.Add(steps[i]);
+            }
+
+            currentCoroutine = StartCoroutine(Run(newSteps));
+        }
+        else
+        {
+            // 각 스탭에 따라 로봇의 모터가 움직여야 한다.
+            currentCoroutine = StartCoroutine(Run());
+        }
+
+
     }
 
     /// <summary>
@@ -220,10 +242,9 @@ public class RobotController : MonoBehaviour
     /// </summary>
     public void OnEStopBtnClkEvent()
     {
-        eStopStep = new Step(-1, 100, 0, false);
-
         isEStopped = true;
-        // 멈추는 순간 각도의 정보를 새로운 스탭 정보에 저장 -> 다시 싱글 버튼 클릭시 멈춘 위치에서 부터 마지막 스탭까지 연결
+        // 멈추는 순간 각도의 정보를 새로운 스탭 정보에 저장
+        // -> 다시 싱글 버튼 클릭시 멈춘 위치에서 부터 마지막 스탭까지 연결
     }
 
     /// <summary>
@@ -249,6 +270,31 @@ public class RobotController : MonoBehaviour
                 }
 
                 yield return RunStep(steps[i - 1], steps[i]);
+
+                if (isEStopped)
+                    break;
+            }
+        }
+    }
+
+    IEnumerator Run(List<Step> stepList)
+    {
+        if (stepList.Count > 0)
+        {
+            for (int i = 0; i < stepList.Count; i++) // 2개: 0, 1, ?
+            {
+                currentStepNumber = i;
+                nowStepInfoTxt.text = $"Total step count: {totalSteps} / Current step: {currentStepNumber}";
+
+                if (i - 1 < 0)
+                {
+                    continue;
+                }
+
+                yield return RunStep(stepList[i - 1], stepList[i]);
+
+                if (isEStopped)
+                    break;
             }
         }
     }
@@ -271,7 +317,7 @@ public class RobotController : MonoBehaviour
         Vector3 nextAxis5AEuler = new Vector3(0, 0, nextStep.angleAxis5);
 
         float currentTime = 0;
-        while (true)
+        while (!isEStopped)
         {
             currentTime += Time.deltaTime;
 
@@ -280,22 +326,32 @@ public class RobotController : MonoBehaviour
                 break;
             }
 
-            if (motorAxis1.rotation.eulerAngles.y <= nextStep.angleAxis1)
-            {
-                motorAxis1.rotation *= Quaternion.Euler(0, prevStep.speed * 0.01f, 0);
-            }
-            else
-            {
+            //if (motorAxis1.rotation.eulerAngles.y <= nextStep.angleAxis1)
+            //{
+            //    motorAxis1.rotation *= Quaternion.Euler(0, prevStep.speed * 0.01f, 0);
+            //}
+            //else
+            //{
 
-                break;
-            }
-            //motorAxis1.localRotation = RotateAngle(prevAxis1Euler, nextAxis1AEuler, currentTime / (prevStep.speed * 0.01f));
-            //motorAxis2.localRotation = RotateAngle(prevAxis2Euler, nextAxis2AEuler, currentTime / (prevStep.speed * 0.01f));
-            //motorAxis3.localRotation = RotateAngle(prevAxis3Euler, nextAxis3AEuler, currentTime / (prevStep.speed * 0.01f));
-            //motorAxis4.localRotation = RotateAngle(prevAxis4Euler, nextAxis4AEuler, currentTime / (prevStep.speed * 0.01f));
-            //motorAxis5.localRotation = RotateAngle(prevAxis5Euler, nextAxis5AEuler, currentTime / (prevStep.speed * 0.01f));
+            //    break;
+            //}
+            motorAxis1.localRotation = RotateAngle(prevAxis1Euler, nextAxis1AEuler, currentTime / (prevStep.speed * 0.01f));
+            motorAxis2.localRotation = RotateAngle(prevAxis2Euler, nextAxis2AEuler, currentTime / (prevStep.speed * 0.01f));
+            motorAxis3.localRotation = RotateAngle(prevAxis3Euler, nextAxis3AEuler, currentTime / (prevStep.speed * 0.01f));
+            motorAxis4.localRotation = RotateAngle(prevAxis4Euler, nextAxis4AEuler, currentTime / (prevStep.speed * 0.01f));
+            motorAxis5.localRotation = RotateAngle(prevAxis5Euler, nextAxis5AEuler, currentTime / (prevStep.speed * 0.01f));
 
             yield return new WaitForEndOfFrame();
+        }
+
+        if (isEStopped)
+        {
+            eStopStep = new Step(-1, prevStep.speed, prevStep.duration, prevStep.isSuctionOn);
+            eStopStep.angleAxis1 = motorAxis1.localRotation.eulerAngles.y;
+            eStopStep.angleAxis2 = motorAxis2.localRotation.eulerAngles.z;
+            eStopStep.angleAxis3 = motorAxis3.localRotation.eulerAngles.z;
+            eStopStep.angleAxis4 = motorAxis4.localRotation.eulerAngles.x;
+            eStopStep.angleAxis5 = motorAxis5.localRotation.eulerAngles.z;
         }
 
         yield return new WaitForSeconds(prevStep.duration);
