@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\MPS\Pusher.cs" />
     <Compile Include="Assets\Scripts\Pinball\PinballManager.cs" />
     <Compile Include="Assets\Scripts\Physics\Manager.cs" />
+    <Compile Include="Assets\Scripts\RobotController\Suction.cs" />
     <Compile Include="Assets\Scripts\CoroutineScene\CoroutineManager.cs" />
     <Compile Include="Assets\Scripts\Physics\Sensor.cs" />
     <Compile Include="Assets\Scripts\Interior\CorgiMove.cs" />

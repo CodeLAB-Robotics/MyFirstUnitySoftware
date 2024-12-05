@@ -71,7 +71,7 @@ public class RobotController : MonoBehaviour
     [Header("UI 정리")]
     [SerializeField] TMP_Text nowStepInfoTxt;
     [SerializeField] int totalSteps;
-    [SerializeField] int currentStepNumber;
+    public int currentStepNumber;
     [SerializeField] TMP_InputField stepInput;
     [SerializeField] TMP_InputField speedInput;
     [SerializeField] TMP_InputField durationInput;
@@ -711,5 +711,10 @@ public class RobotController : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        print(other.name);
     }
 }
