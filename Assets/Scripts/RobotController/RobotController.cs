@@ -55,6 +55,7 @@ public class RobotController : MonoBehaviour
     [SerializeField] Step eStopStep;
     [SerializeField] bool isStopped = false;
     [SerializeField] bool isEStopped = false;
+    [SerializeField] bool isCycleClicked = false;
 
     [Header("Axis Pivots")]
     [SerializeField] Transform motorAxis1;
@@ -76,8 +77,10 @@ public class RobotController : MonoBehaviour
     [SerializeField] TMP_InputField angleAxis3Input;
     [SerializeField] TMP_InputField angleAxis4Input;
     [SerializeField] TMP_InputField angleAxis5Input;
+    [SerializeField] List<Button> buttons = new List<Button>();
 
     Coroutine currentCoroutine;
+    int cycleClkCnt = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -173,6 +176,14 @@ public class RobotController : MonoBehaviour
         step.angleAxis4 = angleAxis4;
         step.angleAxis5 = angleAxis5;
 
+
+        if(cycleClkCnt > 0 && steps.Count != 0)
+        {
+            steps.RemoveAt(steps.Count - 1);
+
+            cycleClkCnt = 0;
+        }
+
         steps.Add(step);
 
         totalSteps++;
@@ -226,7 +237,47 @@ public class RobotController : MonoBehaviour
             currentCoroutine = StartCoroutine(Run());
         }
 
+        SetButtonsActive(false);
+    }
 
+    public void OnCycleBtnClkEvent()
+    {
+        isCycleClicked = true;
+
+        if(cycleClkCnt == 0) 
+            steps.Add(steps[0]);
+
+        cycleClkCnt++;
+
+        currentCoroutine = StartCoroutine(RunCycle());
+
+        SetButtonsActive(false);
+    }
+
+    public void SetButtonsActive(bool active)
+    {
+        foreach(var btn in buttons)
+        {
+            btn.interactable = active;
+        }
+    }
+
+    IEnumerator RunCycle()
+    {
+        while(isCycleClicked)
+        {
+            yield return Run();
+        }
+
+        if (cycleClkCnt > 0 && steps.Count != 0)
+        {
+            steps.RemoveAt(steps.Count - 1);
+
+            cycleClkCnt = 0;
+
+        }
+
+        SetButtonsActive(true);
     }
 
     /// <summary>
@@ -235,6 +286,8 @@ public class RobotController : MonoBehaviour
     public void OnStopBtnClkEvent()
     {
         isStopped = true;
+
+        isCycleClicked = false;
     }
 
     /// <summary>
@@ -243,6 +296,8 @@ public class RobotController : MonoBehaviour
     public void OnEStopBtnClkEvent()
     {
         isEStopped = true;
+
+        isCycleClicked = false;
         // 멈추는 순간 각도의 정보를 새로운 스탭 정보에 저장
         // -> 다시 싱글 버튼 클릭시 멈춘 위치에서 부터 마지막 스탭까지 연결
     }
@@ -272,8 +327,19 @@ public class RobotController : MonoBehaviour
                 yield return RunStep(steps[i - 1], steps[i]);
 
                 if (isEStopped)
+                {
+                    SetButtonsActive(true);
                     break;
+                }
             }
+        }
+
+        if(!isCycleClicked)
+        {
+            SetButtonsActive(true);
+
+            //Button originBtn = buttons.Find(btn => btn.name == "Origin Button");
+            //originBtn.interactable = true;
         }
     }
 
@@ -294,7 +360,10 @@ public class RobotController : MonoBehaviour
                 yield return RunStep(stepList[i - 1], stepList[i]);
 
                 if (isEStopped)
+                {
+                    SetButtonsActive(true);
                     break;
+                }
             }
         }
     }
