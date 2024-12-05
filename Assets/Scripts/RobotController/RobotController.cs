@@ -59,6 +59,7 @@ public class RobotController : MonoBehaviour
     [SerializeField] bool isStopped = false;
     [SerializeField] bool isEStopped = false;
     [SerializeField] bool isCycleClicked = false;
+    [SerializeField] float resolution = 0.002f;
 
     [Header("Axis Pivots")]
     [SerializeField] Transform motorAxis1;
@@ -601,6 +602,114 @@ public class RobotController : MonoBehaviour
         else
         {
             print("파일이 존재하지 않습니다. 파일 이름을 확인해 주세요.");
+        }
+    }
+
+    bool isUpBtnPressed = false;
+    bool isDownBtnPressed = false;
+    /// <summary>
+    /// 1. axis의 종류에 따라, UI에 있는 Axis Input의 값 변경
+    /// 2. 변경되는 값을 실제 motorAxis1에 적용
+    /// </summary>
+    /// <param name="axis"></param>
+    public void OnUpBtnEnterClkEvent(string axis)
+    {
+        isUpBtnPressed = true;
+        StartCoroutine(OnPointerUpStay(axis));
+    }
+
+    public void OnUpBtnExitClkEvent()
+    {
+        isUpBtnPressed = false;
+    }
+
+    public void OnDownBtnEnterClkEvent(string axis)
+    {
+        isDownBtnPressed = true;
+        StartCoroutine(OnPointerDownStay(axis));
+    }
+
+    public void OnDownBtnExitClkEvent()
+    {
+        isDownBtnPressed = false;
+    }
+
+    float angleAxis1;
+    float angleAxis2;
+    float angleAxis3;
+    float angleAxis4;
+    float angleAxis5;
+    IEnumerator OnPointerUpStay(string axis)
+    {
+        while (isUpBtnPressed)
+        {
+            switch(axis)
+            {
+                case "Axis1":
+                    angleAxis1 += resolution;
+                    angleAxis1Input.text = angleAxis1.ToString();
+                    motorAxis1.transform.localRotation = Quaternion.Euler(0, angleAxis1, 0);
+                    break;
+                case "Axis2":
+                    angleAxis2 += resolution;
+                    angleAxis2Input.text = angleAxis2.ToString();
+                    motorAxis2.transform.localRotation = Quaternion.Euler(0, 0, angleAxis2);
+                    break;
+                case "Axis3":
+                    angleAxis3 += resolution;
+                    angleAxis3Input.text = angleAxis3.ToString();
+                    motorAxis3.transform.localRotation = Quaternion.Euler(0, 0, angleAxis3);
+                    break;
+                case "Axis4":
+                    angleAxis4 += resolution;
+                    angleAxis4Input.text = angleAxis4.ToString();
+                    motorAxis4.transform.localRotation = Quaternion.Euler(angleAxis4, 0, 0);
+                    break;
+                case "Axis5":
+                    angleAxis5 += resolution;
+                    angleAxis5Input.text = angleAxis5.ToString();
+                    motorAxis5.transform.localRotation = Quaternion.Euler(0, 0, angleAxis5);
+                    break;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    IEnumerator OnPointerDownStay(string axis)
+    {
+        while (isDownBtnPressed)
+        {
+            switch (axis)
+            {
+                case "Axis1":
+                    angleAxis1 -= resolution;
+                    angleAxis1Input.text = angleAxis1.ToString();
+                    motorAxis1.transform.localRotation = Quaternion.Euler(0, angleAxis1, 0);
+                    break;
+                case "Axis2":
+                    angleAxis2 -= resolution;
+                    angleAxis2Input.text = angleAxis2.ToString();
+                    motorAxis2.transform.localRotation = Quaternion.Euler(0, 0, angleAxis2);
+                    break;
+                case "Axis3":
+                    angleAxis3 -= resolution;
+                    angleAxis3Input.text = angleAxis3.ToString();
+                    motorAxis3.transform.localRotation = Quaternion.Euler(0, 0, angleAxis3);
+                    break;
+                case "Axis4":
+                    angleAxis4 -= resolution;
+                    angleAxis4Input.text = angleAxis4.ToString();
+                    motorAxis4.transform.localRotation = Quaternion.Euler(angleAxis4, 0, 0);
+                    break;
+                case "Axis5":
+                    angleAxis5 -= resolution;
+                    angleAxis5Input.text = angleAxis5.ToString();
+                    motorAxis5.transform.localRotation = Quaternion.Euler(0, 0, angleAxis5);
+                    break;
+            }
+
+            yield return new WaitForEndOfFrame();
         }
     }
 }

@@ -119,17 +119,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &69898987 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4551539318167144947, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &69898989 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8133518536967673975, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 69898987}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &69898992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69898987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis4
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &131603585 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6781799522699732029, guid: 1333db89c68d16b409683428d574fcab, type: 3}
@@ -519,17 +569,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &386076785 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3791831065751176661, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &386076787 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4911316426292208693, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 386076785}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &386076790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386076785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis5
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &507198717 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2683134533202351761, guid: 1333db89c68d16b409683428d574fcab, type: 3}
@@ -541,17 +641,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &525239327 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1230915400201656560, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &525239329 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2084453665328756239, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 525239327}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &525239332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525239327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis3
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &660538443
 GameObject:
   m_ObjectHideFlags: 0
@@ -781,7 +931,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 939179681}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6677633289106006430}
+        m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+        m_MethodName: OnLoadBtnClkEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &939179681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -957,17 +1119,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1017198111 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3730178459145394575, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1017198113 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6907058905467621689, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1017198111}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1017198116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017198111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis3
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1092155551
 GameObject:
   m_ObjectHideFlags: 0
@@ -1104,17 +1316,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1092155551}
   m_CullTransparentMesh: 1
+--- !u!1 &1138193038 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8411249592935390880, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1138193040 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6844022704188210886, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1138193038}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1138193043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138193038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis2
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1185500132
 GameObject:
   m_ObjectHideFlags: 0
@@ -1224,28 +1486,128 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1222509206 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8772986134692990236, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1222509208 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1503245112894092392, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1222509206}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1222509211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222509206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis5
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!1 &1345894982 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6948535362562538849, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1345894984 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7705988440938096502, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1345894982}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1345894987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345894982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis2
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1455833786
 GameObject:
   m_ObjectHideFlags: 0
@@ -1298,17 +1660,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
+--- !u!1 &1548556033 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 559670557436542783, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1548556035 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5800723081494817672, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1548556033}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1548556038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548556033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis1
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnDownBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &1699532554 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5576168969833059986, guid: 1333db89c68d16b409683428d574fcab, type: 3}
@@ -1510,17 +1922,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014035041}
   m_CullTransparentMesh: 1
+--- !u!1 &2022887091 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7023181312698584574, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2022887093 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 233433363270597236, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2022887091}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2022887096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2022887091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis4
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &2090775940 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8680566522886980636, guid: 1333db89c68d16b409683428d574fcab, type: 3}
@@ -1537,17 +1999,67 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4144660716659527641, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2123557182 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3530833236488268199, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+  m_PrefabInstance: {fileID: 8575744820231319706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2123557184 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5555170162204285264, guid: 1333db89c68d16b409683428d574fcab, type: 3}
   m_PrefabInstance: {fileID: 8575744820231319706}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2123557182}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2123557187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2123557182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnEnterClkEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Axis1
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6677633289106006430}
+          m_TargetAssemblyTypeName: RobotController, Assembly-CSharp
+          m_MethodName: OnUpBtnExitClkEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &6677633289106006430 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5042227135311427477, guid: 1333db89c68d16b409683428d574fcab, type: 3}
@@ -1939,6 +2451,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2923297583332227006, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      propertyPath: m_text
+      value: Axis4
+      objectReference: {fileID: 0}
     - target: {fileID: 3153394464274710147, guid: 1333db89c68d16b409683428d574fcab, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2043,6 +2559,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5042227135311427477, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      propertyPath: resolution
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5042227135311427477, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      propertyPath: loadFileInput
+      value: 
+      objectReference: {fileID: 211106165}
     - target: {fileID: 5042227135311427477, guid: 1333db89c68d16b409683428d574fcab, type: 3}
       propertyPath: buttons.Array.size
       value: 18
@@ -2143,6 +2667,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5109968089131608779, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      propertyPath: m_text
+      value: Axis2
+      objectReference: {fileID: 0}
     - target: {fileID: 5189687116253047189, guid: 1333db89c68d16b409683428d574fcab, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2158,6 +2686,14 @@ PrefabInstance:
     - target: {fileID: 5189687116253047189, guid: 1333db89c68d16b409683428d574fcab, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6389771688008859600, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      propertyPath: m_text
+      value: Axis3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6419454335593404156, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      propertyPath: m_text
+      value: Axis5
       objectReference: {fileID: 0}
     - target: {fileID: 6596317843526092265, guid: 1333db89c68d16b409683428d574fcab, type: 3}
       propertyPath: m_Name
@@ -2436,7 +2972,37 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4144660716659527641, guid: 1333db89c68d16b409683428d574fcab, type: 3}
       insertIndex: -1
       addedObject: {fileID: 939179679}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3530833236488268199, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2123557187}
+    - targetCorrespondingSourceObject: {fileID: 559670557436542783, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1548556038}
+    - targetCorrespondingSourceObject: {fileID: 8411249592935390880, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1138193043}
+    - targetCorrespondingSourceObject: {fileID: 6948535362562538849, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1345894987}
+    - targetCorrespondingSourceObject: {fileID: 3730178459145394575, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1017198116}
+    - targetCorrespondingSourceObject: {fileID: 1230915400201656560, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 525239332}
+    - targetCorrespondingSourceObject: {fileID: 7023181312698584574, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2022887096}
+    - targetCorrespondingSourceObject: {fileID: 4551539318167144947, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 69898992}
+    - targetCorrespondingSourceObject: {fileID: 8772986134692990236, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1222509211}
+    - targetCorrespondingSourceObject: {fileID: 3791831065751176661, guid: 1333db89c68d16b409683428d574fcab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 386076790}
   m_SourcePrefab: {fileID: 100100000, guid: 1333db89c68d16b409683428d574fcab, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
