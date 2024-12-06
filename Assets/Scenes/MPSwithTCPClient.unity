@@ -31100,6 +31100,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataInput: {fileID: 834466486}
+  dataToServer: 
+  dataFromServer: 
   isConnected: 0
   interval: 1
   xDeviceBlockSize: 2
@@ -31108,6 +31110,7 @@ MonoBehaviour:
   xDevices: 0000000000000000
   yDevices: 0000000000000000
   dDevices: 0000000000000000
+  isDataCorrect: 0
 --- !u!1 &1984872172
 GameObject:
   m_ObjectHideFlags: 0
