@@ -17,9 +17,12 @@ public class TCPClient : MonoBehaviour
     [SerializeField] TMP_InputField dataInput;
     public bool isConnected;
     public float interval;
-    public string xDevices = "0000000000000000";
-    public string yDevices = "0000000000000000";
-    public string dDevices = "0000000000000000";
+    public int xDeviceBlockSize;
+    public int yDeviceBlockSize;
+    public int dDeviceBlockSize;
+    public string xDevices;
+    public string yDevices;
+    public string dDevices;
 
     TcpClient client;
     NetworkStream stream;
@@ -48,6 +51,22 @@ public class TCPClient : MonoBehaviour
         {
             print(ex);
             print("서버를 먼저 작동시켜 주세요.");
+        }
+
+
+        for (int i = 0; i < xDeviceBlockSize; i++)
+        {
+            xDevices += "0000000000000000";
+        }
+
+        for (int i = 0; i < yDeviceBlockSize; i++)
+        {
+            yDevices += "0000000000000000";
+        }
+
+        for (int i = 0; i < dDeviceBlockSize; i++)
+        {
+            dDevices += "0000000000000000";
         }
     }
 
@@ -98,11 +117,11 @@ public class TCPClient : MonoBehaviour
             // SET,X0,128,GET,Y0,2,GET,D0,3 -> 서버로 전송 -> WriteDeviceBlock 1번, ReadDeviceBlock 1번
             
             // 1. MPS의 X 디바이스 정보를 정수형으로 전달한다.
-            string returnValue = WriteDevices("X0", 1, xDevices); // SET,X0,128
+            //string returnValue = WriteDevices("X0", 2, xDevices); // SET,X0,128
 
             // 2. PLC의 Y, D 디바이스 정보를 2진수 형태로 받는다.
             yDevices = ReadDevices("Y0", 2); //  GET,Y0,2
-            dDevices = ReadDevices("D0", 1); //  GET,D0,1
+            //dDevices = ReadDevices("D0", 1); //  GET,D0,1
 
 
             // 3. 통합: 서버에서 데이터를 주고 받은 후 원하는 데이터만 받기

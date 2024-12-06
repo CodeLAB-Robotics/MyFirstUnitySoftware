@@ -145,6 +145,8 @@ namespace Server
             // SET,X0,3,128,64,266
             string[] strArray = message.Split(',');
 
+            if (strArray.Length < 3) return $"문자열 이상";
+
             string deviceName = strArray[1];        // X0
             int blockSize = int.Parse(strArray[2]); // 3
             int[] data = new int[blockSize];        // 128,64,266

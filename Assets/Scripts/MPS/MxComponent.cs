@@ -23,10 +23,14 @@ public class MxComponent : MonoBehaviour
 
     ActUtlType64 mxComponent;
     [SerializeField] TMP_InputField deviceInput;
-    public string xDevices = "0000000000000000";
-    public string yDevices = "0000000000000000";
-    public string dDevices = "0000000000000000";
+    public int xDeviceBlockSize;
+    public int yDeviceBlockSize;
+    public int dDeviceBlockSize;
+    public string xDevices;
+    public string yDevices;
+    public string dDevices;
     bool isStartBtnClicked = false;
+    public bool isDataRead = false;
 
     private void Awake()
     {
@@ -40,6 +44,21 @@ public class MxComponent : MonoBehaviour
         mxComponent = new ActUtlType64();
 
         mxComponent.ActLogicalStationNumber = 1;
+
+        for(int i = 0; i < xDeviceBlockSize; i++)
+        {
+            xDevices += "0000000000000000";
+        }
+
+        for (int i = 0; i < yDeviceBlockSize; i++)
+        {
+            yDevices += "0000000000000000";
+        }
+
+        for (int i = 0; i < dDeviceBlockSize; i++)
+        {
+            dDevices += "0000000000000000";
+        }
     }
 
     /// <summary>
@@ -71,9 +90,11 @@ public class MxComponent : MonoBehaviour
         {
             WriteDevices("X0", 2, xDevices); // Unity -> PLC : Unity 입력 디바이스(x device)들의 정보를 PLC로 전송
             yDevices = ReadDevices("Y0", 2); // PLC -> Unity : PLC의 출력 디바이스(y device)들의 정보를 PC로 전송
-            dDevices = ReadDevices("D0", 1); // 55 or 100
+            //dDevices = ReadDevices("D0", 1); // 55 or 100
 
             yield return new WaitForSeconds(0.15f);
+
+            isDataRead = true;
         }
     }
 
@@ -116,6 +137,8 @@ public class MxComponent : MonoBehaviour
             string hexValue = Convert.ToString(returnValue, 16);
             print($"에러코드를 확인해 주세요. 에러코드: {hexValue}");
         }
+
+        isDataRead = false;
     }
 
     public void OnGetDeviceBtnClkEvent()
@@ -190,7 +213,7 @@ public class MxComponent : MonoBehaviour
                 totalData += input;
             }
 
-            return totalData; // 00011001100
+            return totalData; // 110101000100000 + 110101000100000 
         }
         else
         {
@@ -212,7 +235,7 @@ public class MxComponent : MonoBehaviour
         {
             for (int i = 0; i < blockSize; i++)
             {
-                string splited = data.Substring(i * 16, 16);        // 1101010001000000
+                string splited = data.Substring(i*16, 16);        // 1101010001000000
                 splited = Reverse(splited);                         // 0000001000101011(reversed)
                 convertedData[i] = Convert.ToInt32(splited, 2);     // 555(10진수 변환)
             }
