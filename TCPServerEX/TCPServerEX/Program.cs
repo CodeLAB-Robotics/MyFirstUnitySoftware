@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using ActUtlType64Lib;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Server
 {
@@ -69,18 +70,18 @@ namespace Server
                         {
                             msgToClient = Disconnect();
                         }
-                        else if(message.Contains("SET"))
+                        else if(message.Contains("SET") && message.Contains("GET"))
                         {
-                            // SET,X0,3,128,64,266
+                            // SET,X0,3,128,64,266,GET,X0,2
                             msgToClient = WriteDevices(message);
-                        }
+                        }/*
                         else if(message.Contains("GET"))
                         {
                             // GET,X0,3
                             // ReadDeviceBlock
                             // 33,22
                             msgToClient = ReadDevices(message);
-                        }
+                        }*/
 
                         // 4. 클라이언트에 데이터 보내기
                         buffer = new byte[1024]; // 버퍼 초기화
@@ -123,7 +124,7 @@ namespace Server
                     Console.WriteLine("데이터 전송 완료(Server -> MxComponent)");
 
                     // int[] data = {32, 22} -> string d = "3222"
-                    string convertedData = String.Join(",", data); // "32,22", "128"
+                    string convertedData = string.Join(",", data); // "32,22", "128"
 
                     return convertedData;
                 }
@@ -142,17 +143,19 @@ namespace Server
 
         private static string WriteDevices(string message)
         {
-            // SET,X0,3,128,64,266
+            // SET,Y0,3,128,64,266,GET,X0,2
             string[] strArray = message.Split(',');
 
             if (strArray.Length < 3) return $"문자열 이상";
 
-            string deviceName = strArray[1];        // X0
-            int blockSize = int.Parse(strArray[2]); // 3
-            int[] data = new int[blockSize];        // 128,64,266
+            string yDeviceName = strArray[1];        // X0
+            int yDeviceBlockSize = int.Parse(strArray[2]); // 3
+            int[] data = new int[yDeviceBlockSize];        // 128,64,266
+            string xDeviceName = strArray[3 + yDeviceBlockSize + 1];
+            string xDeviceBlockSize = strArray[3 + yDeviceBlockSize + 2];
 
             int j = 0;
-            for(int i = 3; i < strArray.Length; i++)
+            for(int i = 3; i < yDeviceBlockSize + 3; i++)
             {
                 int value;
                 bool isCorrect = int.TryParse(strArray[i], out value);
@@ -163,11 +166,16 @@ namespace Server
                 j++;
             }
 
-            int iRet = mxComponent.WriteDeviceBlock(deviceName, blockSize, data[0]);
+            int iRet = mxComponent.WriteDeviceBlock(yDeviceName, yDeviceBlockSize, data[0]);
+            int[] xData = new int[int.Parse(xDeviceBlockSize)];
+            int iRet2 = mxComponent.ReadDeviceBlock(xDeviceName, int.Parse(xDeviceBlockSize), out xData[0]);
 
-            if (iRet == 0)
+            string result = string.Join(",", xData);
+
+            if (iRet == 0 && iRet2 == 0)
             {
-                return "데이터 전송 완료(Server -> MxComponent)";
+                Console.WriteLine("데이터 읽기 & 쓰기 완료");
+                return result;
             }
             else
             {

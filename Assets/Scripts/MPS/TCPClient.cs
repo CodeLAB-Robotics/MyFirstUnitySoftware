@@ -9,12 +9,15 @@ using UnityEngine.Windows;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class TCPClient : MonoBehaviour
 {
     public static TCPClient Instance;
 
     [SerializeField] TMP_InputField dataInput;
+    [SerializeField] string dataToServer;
+    [SerializeField] string dataFromServer;
     public bool isConnected;
     public float interval;
     public int xDeviceBlockSize;
@@ -80,12 +83,6 @@ public class TCPClient : MonoBehaviour
         {
             isConnected = true;
 
-            //cts = new CancellationTokenSource();
-            //CancellationToken token = cts.Token;
-
-            //if (isConnected)
-            //    t = Task.Run(() => RequestAsync(), token);
-
             StartCoroutine(CoRequest());
         }
     }
@@ -106,21 +103,27 @@ public class TCPClient : MonoBehaviour
         }
     }
 
+    public bool isDataCorrect;
     IEnumerator CoRequest()
     {
-        while(isConnected)
+        yield return new WaitUntil(() => isConnected);
+
+        Task.Run(() => RequestAsync());
+
+        while (isConnected)
         {
             //string data = Request("temp"); // GET,X0,1 / SET,X0,128
 
-            yield return new WaitForSeconds(interval);
 
             // SET,X0,128,GET,Y0,2,GET,D0,3 -> 서버로 전송 -> WriteDeviceBlock 1번, ReadDeviceBlock 1번
             
             // 1. MPS의 X 디바이스 정보를 정수형으로 전달한다.
-            //string returnValue = WriteDevices("X0", 2, xDevices); // SET,X0,128
+            WriteDevices("X0", 2, xDevices); // SET,X0,3,12,68,44
 
             // 2. PLC의 Y, D 디바이스 정보를 2진수 형태로 받는다.
+
             yDevices = ReadDevices("Y0", 2); //  GET,Y0,2
+
             //dDevices = ReadDevices("D0", 1); //  GET,D0,1
 
 
@@ -128,6 +131,8 @@ public class TCPClient : MonoBehaviour
             // (Unity to Server 데이터 형식: SET,X0,3,128,24,1/GET,Y0,2/GET,D0,3)
             // (Server to Unity 데이터 형식: X0,123,24/D0,23
             //Request($"SET,X0,1,{xDevices}/GET,Y0,2/GET,D0,1");
+
+            yield return new WaitForSeconds(interval);
         }
     }
 
@@ -157,15 +162,15 @@ public class TCPClient : MonoBehaviour
         }
 
         // Server로 데이터 전송
-        print($"SET,{deviceName},{blockSize}{totalMsg}");
-        string returnValue = Request($"SET,{deviceName},{blockSize}{totalMsg}"); // SET,X0,3,128,64,266
-        return returnValue;
+        dataToServer = $"SET,{deviceName},{blockSize}{totalMsg},GET,X0,2";
+        //dataToServer = Request($"SET,{deviceName},{blockSize}{totalMsg}"); // SET,X0,3,128,64,266
+        return dataToServer;
     }
 
     public string ReadDevices(string deviceName, int blockSize)
     {
         // "33,22" or "128"
-        string returnValue = Request($"GET,{deviceName},{blockSize}"); // GET,X0,3
+        string returnValue = dataFromServer; // GET,X0,3
         
         int[] data = new int[blockSize];
         string totalData = "";
@@ -174,7 +179,14 @@ public class TCPClient : MonoBehaviour
         {
             print("디바이스 블록 읽기가 완료되었습니다.");
 
-            data = returnValue.ToIntArray(); // { 33, 22 }
+            // Correct: 8193,0
+            //data = returnValue.ToIntArray(); // { 33, 22 } 
+            string[] strArray = returnValue.Split(','); // { 33, 22 } 
+            for(int i = 0; i < data.Length; i++)
+            {
+                isDataCorrect = int.TryParse(strArray[i], out data[i]);
+                if (!isDataCorrect) return "Error";
+            }
 
             foreach (int d in data)
             {
@@ -231,27 +243,35 @@ public class TCPClient : MonoBehaviour
 
     public string Request(string message)
     {
-        byte[] dataBytes = Encoding.UTF8.GetBytes(message);
-        stream.Write(dataBytes, 0, dataBytes.Length);
+        try
+        {
+            byte[] dataBytes = Encoding.UTF8.GetBytes(message);
+            stream.Write(dataBytes, 0, dataBytes.Length);
 
-        // 서버로부터 데이터 읽기
-        byte[] buffer = new byte[1024];
-        int bytesRead = stream.Read(buffer, 0, buffer.Length);
-        string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-        print("서버: " + response);
+            // 서버로부터 데이터 읽기
+            byte[] buffer = new byte[1024];
+            int bytesRead = stream.Read(buffer, 0, buffer.Length);
+            string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            print("서버: " + response);
 
-        return response;
+            return response;
+        }
+        catch (Exception ex)
+        {
+            print(ex);
+
+            return ex.ToString();
+        }
     }
 
     private async Task RequestAsync()
     {
-        while (isConnected)
+        while (true)
         {
             try
             {
-                WriteDevices("X0", 1, xDevices);
-
-                byte[] buffer = Encoding.UTF8.GetBytes(xDevices);
+                // dataToServer의 형태 GET,Y0,4,SET,Y0,0,170;
+                byte[] buffer = Encoding.UTF8.GetBytes(dataToServer);
 
                 // NetworkStream에 데이터 쓰기
                 await stream.WriteAsync(buffer, 0, buffer.Length);
@@ -259,8 +279,13 @@ public class TCPClient : MonoBehaviour
                 // 데이터 수신(i.g GET,Y0,5)
                 byte[] buffer2 = new byte[1024];
                 int nBytes = await stream.ReadAsync(buffer2, 0, buffer2.Length);
-                string msg = Encoding.UTF8.GetString(buffer2, 0, nBytes);
-                print(msg);
+
+                // dataFromServer = "0,0,0,170"
+                dataFromServer = Encoding.UTF8.GetString(buffer2, 0, nBytes);
+
+                print("RequestAsync: " + dataFromServer);
+
+                if (!isConnected) break;
             }
             catch (Exception e)
             {

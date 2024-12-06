@@ -79,7 +79,7 @@ namespace MPS
                 if (TCPClient.Instance.isConnected == false)
                     return;
 
-                if (TCPClient.Instance.yDevices.Length == 0) return;
+                if (TCPClient.Instance.yDevices.Length == 0 || !TCPClient.Instance.isDataCorrect) return;
 
                 int 공급실린더전진  = TCPClient.Instance.yDevices[0] - '0';
                 int 공급실린더후진  = TCPClient.Instance.yDevices[1] - '0';
