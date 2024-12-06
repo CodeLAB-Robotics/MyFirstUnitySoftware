@@ -1,4 +1,4 @@
-﻿#define TCPServerVersion // MxComponentVersion or TCPServerVersion
+﻿#define MxComponentVersion // MxComponentVersion or TCPServerVersion
 
 using System;
 using System.Collections;
@@ -18,6 +18,7 @@ namespace MPS
         [SerializeField] List<MeshRenderer> lamps = new List<MeshRenderer>();
         [SerializeField] List<Pusher> pushers = new List<Pusher>();
         [SerializeField] List<Sensor> sensors = new List<Sensor>();
+        [SerializeField] List<RobotController> robotController = new List<RobotController>();
         [SerializeField] int startBtnState = 0;
         [SerializeField] int stopBtnState = 0;
         [SerializeField] int eStopBtnState = 0;
@@ -66,10 +67,14 @@ namespace MPS
                 int 배출실린더후진 = MxComponent.Instance.yDevices[7] - '0';
                 int 컨베이어CW회전 = MxComponent.Instance.yDevices[8] - '0';
                 int 컨베이어CCW회전 = MxComponent.Instance.yDevices[9] - '0';
-                int 컨베이어STOP = MxComponent.Instance.yDevices[10] - '0';
-                int 빨강램프 = MxComponent.Instance.yDevices[11] - '0';
-                int 노랑램프 = MxComponent.Instance.yDevices[12] - '0';
-                int 초록램프 = MxComponent.Instance.yDevices[13] - '0';
+                int 컨베이어STOP = MxComponent.Instance.yDevices[10] - '0';      // Y0A
+                int 빨강램프 = MxComponent.Instance.yDevices[11] - '0';          // Y0B
+                int 노랑램프 = MxComponent.Instance.yDevices[12] - '0';          // Y0C
+                int 초록램프 = MxComponent.Instance.yDevices[13] - '0';          // Y0D
+                int 로봇A싱글사이클 = MxComponent.Instance.yDevices[14] - '0';   // Y0E
+                int 로봇A오리진 = MxComponent.Instance.yDevices[15] - '0';       // Y0F
+                int 로봇B싱글사이클 = MxComponent.Instance.yDevices[16] - '0';   // Y10
+                int 로봇B오리진 = MxComponent.Instance.yDevices[17] - '0';       // Y11
 #elif TCPServerVersion
                 if (TCPClient.Instance.isConnected == false)
                     return;
@@ -135,27 +140,36 @@ namespace MPS
 
                 if (초록램프 == 1) OnLampOnOffBtnClkEvent("Green", true);
                 else OnLampOnOffBtnClkEvent("Green", false);
+
+                if(로봇A싱글사이클 == 1) robotController[0].OnSingleCycleBtnClkEvent();
+
+                if(로봇A오리진 == 1) robotController[0].OnOriginBtnClkEvent();
+
+                if (로봇B싱글사이클 == 1) robotController[1].OnSingleCycleBtnClkEvent();
+
+                if (로봇B오리진 == 1) robotController[1].OnOriginBtnClkEvent();
             }
 
             void UpdateXDevices()
             {
 #if MxComponentVersion
                 // PLC의 x device를 업데이트
-                MxComponent.Instance.xDevices = $"{startBtnState}" +                                 // 시작버튼 상태    (X0)
-                                                $"{stopBtnState}" +                                 // 정지버튼         (X1)
-                                                $"{eStopBtnState}" +                                 // 긴급정지버튼     (X2) 
-                                                $"{(sensors[0].isEnabled == true ? 1 : 0)}" +        // 공급센서         (X3)
-                                                $"{(sensors[1].isEnabled == true ? 1 : 0)}" +        // 물체확인센서     (X4)
-                                                $"{(sensors[2].isEnabled == true ? 1 : 0)}" +        // 금속확인센서     (X5)
-                                                $"{(cylinders[0].isForwardLSOn == true ? 1 : 0)}" + // 공급실린더 전진LS(X6)
-                                                $"{(cylinders[0].isBackwardLSOn == true ? 1 : 0)}" + // 공급실린더 후진LS(X7)
-                                                $"{(cylinders[1].isForwardLSOn == true ? 1 : 0)}" + // 가공실린더 전진LS(X8)
-                                                $"{(cylinders[1].isBackwardLSOn == true ? 1 : 0)}" + // 가공실린더 후진LS(X9)
-                                                $"{(cylinders[2].isForwardLSOn == true ? 1 : 0)}" + // 송출실린더 전진LS(X0A)
-                                                $"{(cylinders[2].isBackwardLSOn == true ? 1 : 0)}" + // 송출실린더 후진LS(X0B)
-                                                $"{(cylinders[3].isForwardLSOn == true ? 1 : 0)}" + // 배출실린더 전진LS(X0C)
-                                                $"{(cylinders[3].isBackwardLSOn == true ? 1 : 0)}" + // 배출실린더 후진LS(X0D)
-                                                "00";                                                // 사용하지 않는 나머지 2비트(X0E, X0F)
+                MxComponent.Instance.xDevices = $"{startBtnState}" +                                    // 시작버튼 상태    (X0)
+                                                $"{stopBtnState}" +                                     // 정지버튼         (X1)
+                                                $"{eStopBtnState}" +                                    // 긴급정지버튼     (X2) 
+                                                $"{(sensors[0].isEnabled == true ? 1 : 0)}" +           // 공급센서         (X3)
+                                                $"{(sensors[1].isEnabled == true ? 1 : 0)}" +           // 물체확인센서     (X4)
+                                                $"{(sensors[2].isEnabled == true ? 1 : 0)}" +           // 금속확인센서     (X5)
+                                                $"{(cylinders[0].isForwardLSOn == true ? 1 : 0)}" +     // 공급실린더 전진LS(X6)
+                                                $"{(cylinders[0].isBackwardLSOn == true ? 1 : 0)}" +    // 공급실린더 후진LS(X7)
+                                                $"{(cylinders[1].isForwardLSOn == true ? 1 : 0)}" +     // 가공실린더 전진LS(X8)
+                                                $"{(cylinders[1].isBackwardLSOn == true ? 1 : 0)}" +    // 가공실린더 후진LS(X9)
+                                                $"{(cylinders[2].isForwardLSOn == true ? 1 : 0)}" +     // 송출실린더 전진LS(X0A)
+                                                $"{(cylinders[2].isBackwardLSOn == true ? 1 : 0)}" +    // 송출실린더 후진LS(X0B)
+                                                $"{(cylinders[3].isForwardLSOn == true ? 1 : 0)}" +     // 배출실린더 전진LS(X0C)
+                                                $"{(cylinders[3].isBackwardLSOn == true ? 1 : 0)}" +    // 배출실린더 후진LS(X0D)
+                                                $"{(robotController[0].isRunning == true ? 1 : 0)}" +   // 현재 로봇의 작동여부(X0E)
+                                                $"{(robotController[1].isRunning == true ? 1 : 0)}";    // 현재 로봇의 작동여부(X0F)                                  // 사용하지 않는 나머지 2비트(X0E, X0F)
 #elif TCPServerVersion
                 TCPClient.Instance.xDevices  = $"{startBtnState}" +                                 // 시작버튼 상태    (X0)
                                                 $"{stopBtnState}" +                                 // 정지버튼         (X1)

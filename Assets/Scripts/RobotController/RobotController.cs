@@ -56,6 +56,7 @@ public class RobotController : MonoBehaviour
     public List<Step> steps = new List<Step>();
     [SerializeField] Step originStep;
     [SerializeField] Step eStopStep;
+    public bool isRunning = false;
     [SerializeField] bool isStopped = false;
     [SerializeField] bool isEStopped = false;
     [SerializeField] bool isCycleClicked = false;
@@ -104,6 +105,9 @@ public class RobotController : MonoBehaviour
         angleAxis3Input.text = "0";
         angleAxis4Input.text = "0";
         angleAxis5Input.text = "0";
+
+        string path = gameObject.name.Contains("RobotA") ? "robotA.csv" : "robotB.csv";
+        LoadTeachingFile(path);
     }
 
     // Teach 버튼을 누르면 각 Axis의 값이 Step으로 저장된다.
@@ -221,7 +225,9 @@ public class RobotController : MonoBehaviour
     // SingleCycle, Cycle, Stop, E-Stop 버튼을 누르면 로봇이 동작한다.
     public void OnSingleCycleBtnClkEvent()
     {
-        if(isEStopped)
+        isRunning = true;
+
+        if (isEStopped)
         {
             isEStopped = false;
 
@@ -346,6 +352,8 @@ public class RobotController : MonoBehaviour
             //Button originBtn = buttons.Find(btn => btn.name == "Origin Button");
             //originBtn.interactable = true;
         }
+
+        isRunning = false;
     }
 
     IEnumerator Run(List<Step> stepList)
@@ -371,6 +379,8 @@ public class RobotController : MonoBehaviour
                 }
             }
         }
+
+        isRunning = false;
     }
 
     IEnumerator RunStep(Step prevStep, Step nextStep)
@@ -503,6 +513,127 @@ public class RobotController : MonoBehaviour
                         int stepNumber;
                         bool isCorrect = int.TryParse(splited[0], out stepNumber);
                         if(!isCorrect)
+                        {
+                            print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
+
+                            return;
+                        }
+
+                        float speed;
+                        isCorrect = float.TryParse(splited[1], out speed);
+                        if (!isCorrect)
+                        {
+                            print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
+
+                            return;
+                        }
+
+                        float duration;
+                        isCorrect = float.TryParse(splited[2], out duration);
+                        if (!isCorrect)
+                        {
+                            print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
+
+                            return;
+                        }
+
+                        bool isSuctionOn;
+                        isCorrect = bool.TryParse(splited[3], out isSuctionOn);
+                        if (!isCorrect)
+                        {
+                            print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
+
+                            return;
+                        }
+
+                        float angleAxis1;
+                        isCorrect = float.TryParse(splited[4], out angleAxis1);
+                        if (!isCorrect)
+                        {
+                            print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
+
+                            return;
+                        }
+
+                        float angleAxis2;
+                        isCorrect = float.TryParse(splited[5], out angleAxis2);
+                        if (!isCorrect)
+                        {
+                            print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
+
+                            return;
+                        }
+
+                        float angleAxis3;
+                        isCorrect = float.TryParse(splited[6], out angleAxis3);
+                        if (!isCorrect)
+                        {
+                            print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
+
+                            return;
+                        }
+
+                        float angleAxis4;
+                        isCorrect = float.TryParse(splited[7], out angleAxis4);
+                        if (!isCorrect)
+                        {
+                            print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
+
+                            return;
+                        }
+
+                        float angleAxis5;
+                        isCorrect = float.TryParse(splited[8], out angleAxis5);
+                        if (!isCorrect)
+                        {
+                            print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
+
+                            return;
+                        }
+
+                        Step stepLoaded = new Step(stepNumber, speed, duration, isSuctionOn);
+                        stepLoaded.angleAxis1 = angleAxis1;
+                        stepLoaded.angleAxis2 = angleAxis2;
+                        stepLoaded.angleAxis3 = angleAxis3;
+                        stepLoaded.angleAxis4 = angleAxis4;
+                        stepLoaded.angleAxis5 = angleAxis5;
+
+                        tempSteps.Add(stepLoaded);
+                    }
+                }
+            }
+
+            steps.Clear();
+            steps.AddRange(tempSteps);
+            //steps = tempSteps.ToList();
+
+            print("파일 읽기가 완료되었습니다.");
+        }
+        else
+        {
+            print("파일이 존재하지 않습니다. 파일 이름을 확인해 주세요.");
+        }
+    }
+
+    public void LoadTeachingFile(string path)
+    {
+        if (File.Exists(path))
+        {
+            List<Step> tempSteps = new List<Step>();
+
+            using (FileStream fs = new FileStream(path, FileMode.Open))
+            {
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        // stepNumber,speed,duration,axis1,axis2,axis3,axis4,axis5
+                        string[] splited = line.Split(",");
+
+                        int stepNumber;
+                        bool isCorrect = int.TryParse(splited[0], out stepNumber);
+                        if (!isCorrect)
                         {
                             print("파일 구조가 잘못되었습니다. 파일을 확인 후 시도해 주세요.");
 
