@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using ActUtlType64Lib;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Server
 {
@@ -45,7 +44,6 @@ namespace Server
 
                 int nByte;
                 string message = "";
-                string msgToClient = "";
 
                 try
                 {
@@ -55,6 +53,7 @@ namespace Server
                         // 4. UTF8 형식으로 인코딩
                         message = Encoding.UTF8.GetString(buffer, 0, nByte);
                         Console.WriteLine($"{DateTime.Now} 클라이언트: " + message);
+                        string msgToClient = "";
 
                         if (message == "Disconnect&Quit")
                         {
@@ -72,8 +71,29 @@ namespace Server
                         }
                         else if(message.Contains("SET") && message.Contains("GET"))
                         {
+                            // msg: GET,X0,4,SET,Y0,0,170
+                            // Read Device -> Write Device
+                            string[] dataFromUnity = message.Split(',');
+                            string devicePoint = dataFromUnity[1]; // X0
+                            int blockNum = int.Parse(dataFromUnity[2]); // 4
+                            string sensorData = dataFromUnity[5] + "," + dataFromUnity[6]; // Sensor Data(0) + Limit Switch Data(170)
+
+                            // 1. PLC의 데이터 읽기(PLC의 실린더 신호를 MPS에 보내기 위해서)
+                            // 신호 ex) int[] = {32,22} : 32(실린더 전후진 신호, 컨베이어 정회전 역회전 신호), 22(램프신호)
+                            string retMsg = ""; // 0,0,0,170,
+                            ReadDeviceBlock(devicePoint, blockNum, out retMsg);
+                            Console.WriteLine(retMsg);
+
+
+                            // 2. PLC에 데이터 쓰기(센서 데이터 + Limit Switch 데이터)
+                            // 2-2: WriteDeviceBlock: 클라이언트로 부터 받은 데이터(dataToServer)에서 MPS의 센서데이터(sensorData)를 PLC에게 전달,
+                            // 2-3: retMsg: retMsg(위에서 받은 PLC 신호) + 현재 센서 데이터(sensorData)를 Client로 전달(dataFromServer)
+                            // dataToServer: GET,Y0,4,SET,Y0,0,170
+                            msgToClient = WriteDeviceBlock(devicePoint, sensorData);
+                            Console.WriteLine(msgToClient);
+
                             // SET,X0,3,128,64,266,GET,X0,2
-                            msgToClient = WriteDevices(message);
+                            //msgToClient = WriteDevices(message);
                         }/*
                         else if(message.Contains("GET"))
                         {
@@ -103,6 +123,60 @@ namespace Server
             // 연결 종료
             stream.Close();
             client.Close();
+        }
+
+        static int blockNum = 1;
+        static int[] devices;
+        // "SET,sensorNum,lsNum"  SET,Y0,0,170
+        public static string WriteDeviceBlock(string deviceName, string dataFromClient)
+        {
+            string[] dataSplited = dataFromClient.Split(",");
+
+            int[] data = new int[blockNum];
+            data[0] = devices[0];
+            data[1] = devices[1];
+            data[2] = int.Parse(dataSplited[0]);
+            data[3] = int.Parse(dataSplited[1]);
+
+            // 0,0,0,170
+            int ret = mxComponent.WriteDeviceBlock(deviceName, blockNum, ref data[0]);
+
+            if (ret == 0)
+            {
+                return $"{data[0]},{data[1]},{data[2]},{data[3]}";
+            }
+            else
+            {
+                return "ERROR " + Convert.ToString(ret, 16);
+            }
+        }
+
+        /// <summary>
+        /// 디바이스를 받기위해서 사용
+        /// </summary>
+        /// <param name="deviceName"></param>
+        /// <param name="blockSize"></param>
+        /// <returns></returns>
+        public static int[] ReadDeviceBlock(string deviceName, int blockSize, out string retMsg)
+        {
+            retMsg = "";
+
+            int ret = mxComponent.ReadDeviceBlock(deviceName, blockSize, out devices[0]);
+
+            if (ret == 0)
+            {
+                foreach (int device in devices)
+                {
+                    retMsg += device.ToString() + ",";
+                }
+
+                return devices;
+            }
+            else
+            {
+                retMsg = "ERROR " + Convert.ToString(ret, 16);
+                return null;
+            }
         }
 
         private static string ReadDevices(string message)

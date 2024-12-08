@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using MPS;
 
 public class TCPClient : MonoBehaviour
 {
@@ -91,7 +92,7 @@ public class TCPClient : MonoBehaviour
     {
         msg = Request("Disconnect"); // DISCONNECTED 일 경우 OK
 
-        //if( msg == "DISCONNECTED" )
+        if( msg == "DISCONNECTED" )
         {
             isConnected = false;
 
@@ -116,16 +117,17 @@ public class TCPClient : MonoBehaviour
 
 
             // SET,X0,128,GET,Y0,2,GET,D0,3 -> 서버로 전송 -> WriteDeviceBlock 1번, ReadDeviceBlock 1번
-            
+
             // 1. MPS의 X 디바이스 정보를 정수형으로 전달한다.
             WriteDevices("X0", 2, xDevices); // SET,X0,3,12,68,44
 
             // 2. PLC의 Y, D 디바이스 정보를 2진수 형태로 받는다.
-
             yDevices = ReadDevices("Y0", 2); //  GET,Y0,2
 
-            //dDevices = ReadDevices("D0", 1); //  GET,D0,1
+            // 3. yDevices를 받아 MPSManager에서 적용
 
+            //dDevices = ReadDevices("D0", 1); //  GET,D0,1
+            //MPSManager.instance.UpdateDevices(xDevices, yDevices, "");
 
             // 3. 통합: 서버에서 데이터를 주고 받은 후 원하는 데이터만 받기
             // (Unity to Server 데이터 형식: SET,X0,3,128,24,1/GET,Y0,2/GET,D0,3)
@@ -162,13 +164,20 @@ public class TCPClient : MonoBehaviour
         }
 
         // Server로 데이터 전송
-        dataToServer = $"SET,{deviceName},{blockSize}{totalMsg},GET,X0,2";
+        dataToServer = $"GET,X0,2,SET,{deviceName},{blockSize}{totalMsg}";
         //dataToServer = Request($"SET,{deviceName},{blockSize}{totalMsg}"); // SET,X0,3,128,64,266
         return dataToServer;
     }
 
+    /// <summary>
+    /// 서버로 부터 받은 데이터(dataFromServer)를 사용하기 좋게 이진수 비트 형태(TotalData)로 변환해야함
+    /// </summary>
+    /// <param name="deviceName"></param>
+    /// <param name="blockSize"></param>
+    /// <returns></returns>
     public string ReadDevices(string deviceName, int blockSize)
     {
+        // dataFromServer: 문자열 "0,0,0,17" -> 정수형 배열
         // "33,22" or "128"
         string returnValue = dataFromServer; // GET,X0,3
         

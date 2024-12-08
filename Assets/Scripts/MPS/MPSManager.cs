@@ -13,6 +13,7 @@ namespace MPS
     /// </summary>
     public class MPSManager : MonoBehaviour
     {
+        public static MPSManager instance;
         [Header("Facilities")]
         [SerializeField] List<Cylinder> cylinders = new List<Cylinder>();
         [SerializeField] List<MeshRenderer> lamps = new List<MeshRenderer>();
@@ -32,6 +33,12 @@ namespace MPS
         Color yellowLamp;
         Color greenLamp;
 
+        private void Awake()
+        {
+            if(instance == null)
+                instance = this;
+        }
+
         private void Start()
         {
             redLamp = lamps[0].material.GetColor("_BaseColor");
@@ -43,9 +50,207 @@ namespace MPS
             OnLampOnOffBtnClkEvent("Green", false);
         }
 
-        private void Update()
+        public void UpdateDevices(string x, string y, string d)
         {
             UpdateYDevices();
+            UpdateXDevices();
+            UpdateDDevices();
+
+            void UpdateYDevices()
+            {
+#if MxComponentVersion
+                if (MxComponent.Instance.state == MxComponent.State.DISCONNECTED)
+                    return;
+
+                if (MxComponent.Instance.yDevices.Length == 0 || !MxComponent.Instance.isDataRead) return;
+
+                int 공급실린더전진 = MxComponent.Instance.yDevices[0] - '0';
+                int 공급실린더후진 = MxComponent.Instance.yDevices[1] - '0';
+                int 가공실린더전진 = MxComponent.Instance.yDevices[2] - '0';
+                int 가공실린더후진 = MxComponent.Instance.yDevices[3] - '0';
+                int 송출실린더전진 = MxComponent.Instance.yDevices[4] - '0';
+                int 송출실린더후진 = MxComponent.Instance.yDevices[5] - '0';
+                int 배출실린더전진 = MxComponent.Instance.yDevices[6] - '0';
+                int 배출실린더후진 = MxComponent.Instance.yDevices[7] - '0';
+                int 컨베이어CW회전 = MxComponent.Instance.yDevices[8] - '0';
+                int 컨베이어CCW회전 = MxComponent.Instance.yDevices[9] - '0';
+                int 컨베이어STOP = MxComponent.Instance.yDevices[10] - '0';      // Y0A
+                int 빨강램프 = MxComponent.Instance.yDevices[11] - '0';          // Y0B
+                int 노랑램프 = MxComponent.Instance.yDevices[12] - '0';          // Y0C
+                int 초록램프 = MxComponent.Instance.yDevices[13] - '0';          // Y0D
+                int 로봇A싱글사이클 = MxComponent.Instance.yDevices[14] - '0';   // Y0E
+                int 로봇A오리진 = MxComponent.Instance.yDevices[15] - '0';       // Y0F
+                int 로봇B싱글사이클 = MxComponent.Instance.yDevices[16] - '0';   // Y10
+                int 로봇B오리진 = MxComponent.Instance.yDevices[17] - '0';       // Y11
+#elif TCPServerVersion
+                if (TCPClient.Instance.isConnected == false)
+                    return;
+
+                if (y.Length == 0 || !TCPClient.Instance.isDataCorrect) return;
+
+                int 공급실린더전진 = y[0] - '0';
+                int 공급실린더후진 = y[1] - '0';
+                int 가공실린더전진 = y[2] - '0';
+                int 가공실린더후진 = y[3] - '0';
+                int 송출실린더전진 = y[4] - '0';
+                int 송출실린더후진 = y[5] - '0';
+                int 배출실린더전진 = y[6] - '0';
+                int 배출실린더후진 = y[7] - '0';
+                int 컨베이어CW회전 = y[8] - '0';
+                int 컨베이어CCW회전 = y[9] - '0';
+                int 컨베이어STOP = y[10] - '0';
+                int 빨강램프 = y[11] - '0';
+                int 노랑램프 = y[12] - '0';
+                int 초록램프 = y[13] - '0';
+                int 로봇A싱글사이클 = y[14] - '0';   // Y0E
+                int 로봇A오리진 = y[15] - '0';       // Y0F
+                int 로봇B싱글사이클 = y[16] - '0';   // Y10
+                int 로봇B오리진 = y[17] - '0';       // Y11
+#endif
+
+                if (공급실린더전진 == 1) cylinders[0].OnForwardBtnClkEvent();
+                else if (공급실린더후진 == 1) cylinders[0].OnBackwardBtnClkEvent();
+
+                if (가공실린더전진 == 1) cylinders[1].OnForwardBtnClkEvent();
+                else if (가공실린더후진 == 1) cylinders[1].OnBackwardBtnClkEvent();
+
+                if (송출실린더전진 == 1) cylinders[2].OnForwardBtnClkEvent();
+                else if (송출실린더후진 == 1) cylinders[2].OnBackwardBtnClkEvent();
+
+                if (배출실린더전진 == 1) cylinders[3].OnForwardBtnClkEvent();
+                else if (배출실린더후진 == 1) cylinders[3].OnBackwardBtnClkEvent();
+
+                if (컨베이어CW회전 == 1)
+                {
+                    foreach (var pusher in pushers)
+                    {
+                        pusher.Move(true);
+                    }
+                }
+                else if (컨베이어CCW회전 == 1)
+                {
+                    foreach (var pusher in pushers)
+                    {
+                        pusher.Move(false);
+                    }
+                }
+
+                if (컨베이어STOP == 1)
+                {
+                    foreach (var pusher in pushers)
+                    {
+                        pusher.Stop();
+                    }
+                }
+
+                if (빨강램프 == 1) OnLampOnOffBtnClkEvent("Red", true);
+                else OnLampOnOffBtnClkEvent("Red", false);
+
+                if (노랑램프 == 1) OnLampOnOffBtnClkEvent("Yellow", true);
+                else OnLampOnOffBtnClkEvent("Yellow", false);
+
+                if (초록램프 == 1) OnLampOnOffBtnClkEvent("Green", true);
+                else OnLampOnOffBtnClkEvent("Green", false);
+
+                if (로봇A싱글사이클 == 1) robotController[0].OnSingleCycleBtnClkEvent();
+
+                if (로봇A오리진 == 1) robotController[0].OnOriginBtnClkEvent();
+
+                if (로봇B싱글사이클 == 1) robotController[1].OnSingleCycleBtnClkEvent();
+
+                if (로봇B오리진 == 1) robotController[1].OnOriginBtnClkEvent();
+            }
+
+            void UpdateXDevices()
+            {
+#if MxComponentVersion
+                if (MxComponent.Instance.state == MxComponent.State.DISCONNECTED)
+                    return;
+
+                if (MxComponent.Instance.yDevices.Length == 0 || !MxComponent.Instance.isDataRead) return;
+
+                // PLC의 x device를 업데이트
+                // 만약 xDevice의 블록 수가 두 번째 블록부터는 0이 16개 들어가야 함.
+                string xDeviceValue = $"{startBtnState}" +                                    // 시작버튼 상태    (X0)
+                                      $"{stopBtnState}" +                                     // 정지버튼         (X1)
+                                      $"{eStopBtnState}" +                                    // 긴급정지버튼     (X2) 
+                                      $"{(sensors[0].isEnabled == true ? 1 : 0)}" +           // 공급센서         (X3)
+                                      $"{(sensors[1].isEnabled == true ? 1 : 0)}" +           // 물체확인센서     (X4)
+                                      $"{(sensors[2].isEnabled == true ? 1 : 0)}" +           // 금속확인센서     (X5)
+                                      $"{(cylinders[0].isForwardLSOn == true ? 1 : 0)}" +     // 공급실린더 전진LS(X6)
+                                      $"{(cylinders[0].isBackwardLSOn == true ? 1 : 0)}" +    // 공급실린더 후진LS(X7)
+                                      $"{(cylinders[1].isForwardLSOn == true ? 1 : 0)}" +     // 가공실린더 전진LS(X8)
+                                      $"{(cylinders[1].isBackwardLSOn == true ? 1 : 0)}" +    // 가공실린더 후진LS(X9)
+                                      $"{(cylinders[2].isForwardLSOn == true ? 1 : 0)}" +     // 송출실린더 전진LS(X0A)
+                                      $"{(cylinders[2].isBackwardLSOn == true ? 1 : 0)}" +    // 송출실린더 후진LS(X0B)
+                                      $"{(cylinders[3].isForwardLSOn == true ? 1 : 0)}" +     // 배출실린더 전진LS(X0C)
+                                      $"{(cylinders[3].isBackwardLSOn == true ? 1 : 0)}" +    // 배출실린더 후진LS(X0D)
+                                      $"{(robotController[0].isRunning == true ? 1 : 0)}" +   // 현재 로봇의 작동여부(X0E)
+                                      $"{(robotController[1].isRunning == true ? 1 : 0)}";    // 현재 로봇의 작동여부(X0F) 
+                
+                for (int i = 1; i < MxComponent.Instance.xDeviceBlockSize; i++)
+                {
+                    xDeviceValue += "0000000000000000";
+                }
+
+                MxComponent.Instance.xDevices = xDeviceValue;
+
+#elif TCPServerVersion
+
+                // PLC의 x device를 업데이트
+                // 만약 xDevice의 블록 수가 두 번째 블록부터는 0이 16개 들어가야 함.
+                string xDeviceValue = $"{startBtnState}" +                                    // 시작버튼 상태    (X0)
+                                      $"{stopBtnState}" +                                     // 정지버튼         (X1)
+                                      $"{eStopBtnState}" +                                    // 긴급정지버튼     (X2) 
+                                      $"{(sensors[0].isEnabled == true ? 1 : 0)}" +           // 공급센서         (X3)
+                                      $"{(sensors[1].isEnabled == true ? 1 : 0)}" +           // 물체확인센서     (X4)
+                                      $"{(sensors[2].isEnabled == true ? 1 : 0)}" +           // 금속확인센서     (X5)
+                                      $"{(cylinders[0].isForwardLSOn == true ? 1 : 0)}" +     // 공급실린더 전진LS(X6)
+                                      $"{(cylinders[0].isBackwardLSOn == true ? 1 : 0)}" +    // 공급실린더 후진LS(X7)
+                                      $"{(cylinders[1].isForwardLSOn == true ? 1 : 0)}" +     // 가공실린더 전진LS(X8)
+                                      $"{(cylinders[1].isBackwardLSOn == true ? 1 : 0)}" +    // 가공실린더 후진LS(X9)
+                                      $"{(cylinders[2].isForwardLSOn == true ? 1 : 0)}" +     // 송출실린더 전진LS(X0A)
+                                      $"{(cylinders[2].isBackwardLSOn == true ? 1 : 0)}" +    // 송출실린더 후진LS(X0B)
+                                      $"{(cylinders[3].isForwardLSOn == true ? 1 : 0)}" +     // 배출실린더 전진LS(X0C)
+                                      $"{(cylinders[3].isBackwardLSOn == true ? 1 : 0)}" +    // 배출실린더 후진LS(X0D)
+                                      $"{(robotController[0].isRunning == true ? 1 : 0)}" +   // 현재 로봇의 작동여부(X0E)
+                                      $"{(robotController[1].isRunning == true ? 1 : 0)}";    // 현재 로봇의 작동여부(X0F) 
+
+                for (int i = 1; i < TCPClient.Instance.xDeviceBlockSize; i++)
+                {
+                    xDeviceValue += "0000000000000000";
+                }
+
+                TCPClient.Instance.xDevices = xDeviceValue;
+
+#endif
+            }
+
+            void UpdateDDevices()
+            {
+#if MxComponentVersion
+                if (MxComponent.Instance.state == MxComponent.State.DISCONNECTED)
+                    return;
+
+                if (MxComponent.Instance.dDevices.Length == 0) return;
+
+                print(MxComponent.Instance.dDevices);
+                print(Convert.ToInt32(MxComponent.Instance.dDevices, 2));
+#elif TCPServerVersion
+                if (TCPClient.Instance.isConnected == false)
+                    return;
+
+                if (TCPClient.Instance.dDevices.Length == 0) return;
+
+                print(TCPClient.Instance.dDevices);
+                //print(Convert.ToInt32(TCPClient.Instance.dDevices, 2));
+#endif
+            }
+        }
+
+        private void Update()
+        {
+            //UpdateYDevices();
             UpdateXDevices();
             UpdateDDevices();
 
