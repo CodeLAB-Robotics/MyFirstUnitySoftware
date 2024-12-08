@@ -44,7 +44,6 @@ namespace Server
 
                 int nByte;
                 string message = "";
-                string msgToClient = "";
 
                 try
                 {
@@ -52,40 +51,54 @@ namespace Server
                     while ((nByte = stream.Read(buffer, 0, buffer.Length)) > 0)
                     {
                         // 4. UTF8 형식으로 인코딩
-                        message = Encoding.UTF8.GetString(buffer, 0, nByte);
+                        message = Encoding.UTF8.GetString(buffer, 0, nByte); // "Connect\0\0\0\0... 1024개
                         Console.WriteLine($"{DateTime.Now} 클라이언트: " + message);
-
-                        if (message == "Disconnect&Quit")
+                        string msgToClient = "";
+                        string retMsg = ""; // 0,0,0,170,
+                        if (message.Contains("Disconnect&Quit"))
                         {
                             msgToClient = Disconnect();
                             Console.WriteLine("서버를 종료합니다.");
                             break;
                         }
-                        else if(message == "Connect")
+                        else if(message.Contains("Connect"))
                         {
                             msgToClient = Connect();
                         }
-                        else if(message == "Disconnect")
+                        else if(message.Contains("Disconnect"))
                         {
                             msgToClient = Disconnect();
                         }
-                        else if(message.Contains("SET"))
+                        else if (message.Contains("SET") && message.Contains("GET"))
                         {
-                            // SET,X0,3,128,64,266
-                            msgToClient = WriteDevices(message);
-                        }
-                        else if(message.Contains("GET"))
-                        {
-                            // GET,X0,3
-                            // ReadDeviceBlock
-                            // 33,22
-                            msgToClient = ReadDevices(message);
+                            // msg: GET,Y0,4,SET,X0,2,0,170
+                            // Read Device -> Write Device
+                            string[] dataFromUnity = message.Split(',');
+                            string xDeviceName = dataFromUnity[1]; // Y0
+                            int xBlockSize = int.Parse(dataFromUnity[2]); // 4
+                            string yDeviceName = dataFromUnity[4]; // X0
+                            int yBlockSize = int.Parse(dataFromUnity[5]); // 2
+                            string sensorData = dataFromUnity[6] + "," + dataFromUnity[7]; // Sensor Data(0) + Limit Switch Data(170)
+                            // 1. PLC의 데이터 읽기(PLC의 실린더 신호를 MPS에 보내기 위해서)
+                            // 신호 ex) int[] = {32,22} : 32(실린더 전후진 신호, 컨베이어 정회전 역회전 신호), 22(램프신호)
+                            devices = new int[xBlockSize];
+                            
+                            ReadDeviceBlock(xDeviceName, xBlockSize, out msgToClient);
+                            Console.WriteLine(msgToClient);
+
+
+                            // 2. PLC에 데이터 쓰기(센서 데이터 + Limit Switch 데이터)
+                            // 2-2: WriteDeviceBlock: 클라이언트로 부터 받은 데이터(dataToServer)에서 MPS의 센서데이터(sensorData)를 PLC에게 전달,
+                            // 2-3: retMsg: retMsg(위에서 받은 PLC 신호) + 현재 센서 데이터(sensorData)를 Client로 전달(dataFromServer)
+                            // dataToServer: GET,Y0,4,SET,X0,0,170
+                            WriteDeviceBlock(yDeviceName, yBlockSize, sensorData);
+                            Console.WriteLine(retMsg); // Y0,0,0
                         }
 
                         // 4. 클라이언트에 데이터 보내기
-                        buffer = new byte[1024]; // 버퍼 초기화
-                        buffer = Encoding.UTF8.GetBytes(msgToClient);
-                        stream.Write(buffer, 0, buffer.Length);
+                        byte[] dataBytes = new byte[1024]; // 새로운 버퍼를 사용해서 다시전송
+                        dataBytes = Encoding.UTF8.GetBytes(msgToClient);
+                        stream.Write(dataBytes, 0, dataBytes.Length);
                     }
 
                     if (message.Contains("Quit"))
@@ -103,6 +116,64 @@ namespace Server
             stream.Close();
             client.Close();
         }
+
+        static int[] devices;
+        // "SET,sensorNum,lsNum"  SET,Y0,0,170
+        public static string WriteDeviceBlock(string deviceName, int blockNum, string dataFromClient)
+        {
+            string[] dataSplited = dataFromClient.Split(",");
+
+            int[] data = new int[blockNum];
+            //data[0] = devices[0]; // xDevice 첫 번재 블록
+            //data[1] = devices[1]; // xDevice 두 번째 블록
+            data[0] = int.Parse(dataSplited[0]); // yDevice 첫 번재 블록
+            data[1] = int.Parse(dataSplited[1]); // yDevice 두 번째 블록
+
+            // 0,0,0,170
+            int ret = mxComponent.WriteDeviceBlock(deviceName, blockNum, ref data[0]);
+
+            if (ret == 0)
+            {
+                //return $"X0,{data[0]},{data[1]},Y0,{data[2]},{data[3]}";
+                return $"{data[0]},{data[1]}";
+            }
+            else
+            {
+                return "ERROR " + Convert.ToString(ret, 16);
+            }
+        }
+
+        /// <summary>
+        /// 디바이스를 받기위해서 사용
+        /// </summary>
+        /// <param name="deviceName"></param>
+        /// <param name="blockSize"></param>
+        /// <returns></returns>
+        public static int[] ReadDeviceBlock(string deviceName, int blockSize, out string retMsg)
+        {
+            retMsg = "";
+
+            int ret = mxComponent.ReadDeviceBlock(deviceName, blockSize, out devices[0]);
+
+            if (ret == 0)
+            {
+                for(int i = 0; i < devices.Length; i++)
+                {
+                    if(i < devices.Length - 1)
+                        retMsg += devices[i].ToString() + ",";
+                    else 
+                        retMsg += devices[i].ToString();
+                }
+
+                return devices;
+            }
+            else
+            {
+                retMsg = "ERROR " + Convert.ToString(ret, 16);
+                return null;
+            }
+        }
+
 
         private static string ReadDevices(string message)
         {
@@ -221,7 +292,7 @@ namespace Server
 
                 Console.WriteLine("Simulator와 연결이 잘 되었습니다.");
 
-                return "CONNECTED";
+                return "CONNECTED___________________________________";
             }
             else
             {
