@@ -86,6 +86,7 @@
     <Compile Include="Assets\Phoenix3D\P3D_Wallpaper_Carpet_and_CurtainFabric_Materials_Pack\Scripts\MaterialSwithcer.cs" />
     <Compile Include="Assets\Phoenix3D\P3D_Wallpaper_Carpet_and_CurtainFabric_Materials_Pack\Scripts\OpenURL.cs" />
     <Compile Include="Assets\Scripts\Pinball\Obstacle.cs" />
+    <Compile Include="Assets\Scripts\TCPCommunicationEX\TCPClientEx.cs" />
     <Compile Include="Assets\Scripts\Cinemachine\CinemachineManager.cs" />
     <Compile Include="Assets\Scripts\Rotation\RotationManager.cs" />
     <Compile Include="Assets\Scripts\Pinball\Handle.cs" />

@@ -486,6 +486,7 @@ public class RobotController : MonoBehaviour
             eStopStep.angleAxis5 = motorAxis5.localRotation.eulerAngles.z;
         }
 
+
         yield return new WaitForSeconds(prevStep.duration);
 
         isRunning = false;
