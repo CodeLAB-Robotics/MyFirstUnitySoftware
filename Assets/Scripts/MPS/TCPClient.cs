@@ -178,7 +178,7 @@ public class TCPClient : MonoBehaviour
 
     public string ReadDevices(string deviceName, int blockSize)
     {
-        string returnValue = dataFromServer; // "X0,0,0,Y0,5760,0"
+        string returnValue = dataFromServer; // "Y0,0,0"
 
         int[] data = new int[blockSize];
         string totalData = "";
@@ -215,7 +215,7 @@ public class TCPClient : MonoBehaviour
                 totalData += input;
             }
 
-            return totalData; // 00011001100
+            return totalData; // 110101000100000 / 110101000100000
         }
         else
         {
@@ -267,16 +267,17 @@ public class TCPClient : MonoBehaviour
             {
                 //WriteDevices("X0", 1, xDevices);
 
+                // GET,Y0,2,SET,X0,2,32,10
                 byte[] dataBytes = Encoding.UTF8.GetBytes(dataToServer);
 
                 // NetworkStream에 데이터 쓰기
                 await stream.WriteAsync(dataBytes, 0, dataBytes.Length);
 
-                // 데이터 수신(i.g GET,Y0,5)
-                byte[] buffer = new byte[1024]; // X,0,0,Y0,0,0
+                // 데이터 수신
+                byte[] buffer = new byte[1024];
                 int nBytes = await stream.ReadAsync(buffer, 0, buffer.Length);
                 dataFromServer = Encoding.UTF8.GetString(buffer, 0, nBytes);
-                print("dataFromServer: " + dataFromServer);
+                print("dataFromServer: " + dataFromServer); // Y0,0,0
             }
             catch (Exception e)
             {

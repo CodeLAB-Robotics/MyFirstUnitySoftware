@@ -145,7 +145,8 @@ namespace MPS
                 if (초록램프 == 1) OnLampOnOffBtnClkEvent("Green", true);
                 else OnLampOnOffBtnClkEvent("Green", false);
 
-                if(로봇A싱글사이클 == 1) robotController[0].OnSingleCycleBtnClkEvent();
+                if(로봇A싱글사이클 == 1) // 동시에 3번 작동
+                    robotController[0].OnSingleCycleBtnClkEvent();
 
                 if(로봇A오리진 == 1) robotController[0].OnOriginBtnClkEvent();
 

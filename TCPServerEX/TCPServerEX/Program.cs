@@ -74,16 +74,16 @@ namespace Server
                             // msg: GET,Y0,4,SET,X0,2,0,170
                             // Read Device -> Write Device
                             string[] dataFromUnity = message.Split(',');
-                            string xDeviceName = dataFromUnity[1]; // Y0
+                            string yDeviceName = dataFromUnity[1]; // Y0
                             int xBlockSize = int.Parse(dataFromUnity[2]); // 4
-                            string yDeviceName = dataFromUnity[4]; // X0
+                            string xDeviceName = dataFromUnity[4]; // X0
                             int yBlockSize = int.Parse(dataFromUnity[5]); // 2
                             string sensorData = dataFromUnity[6] + "," + dataFromUnity[7]; // Sensor Data(0) + Limit Switch Data(170)
                             // 1. PLC의 데이터 읽기(PLC의 실린더 신호를 MPS에 보내기 위해서)
                             // 신호 ex) int[] = {32,22} : 32(실린더 전후진 신호, 컨베이어 정회전 역회전 신호), 22(램프신호)
                             devices = new int[xBlockSize];
                             
-                            ReadDeviceBlock(xDeviceName, xBlockSize, out msgToClient);
+                            ReadDeviceBlock(yDeviceName, xBlockSize, out msgToClient);
                             Console.WriteLine(msgToClient);
 
 
@@ -91,7 +91,7 @@ namespace Server
                             // 2-2: WriteDeviceBlock: 클라이언트로 부터 받은 데이터(dataToServer)에서 MPS의 센서데이터(sensorData)를 PLC에게 전달,
                             // 2-3: retMsg: retMsg(위에서 받은 PLC 신호) + 현재 센서 데이터(sensorData)를 Client로 전달(dataFromServer)
                             // dataToServer: GET,Y0,4,SET,X0,0,170
-                            WriteDeviceBlock(yDeviceName, yBlockSize, sensorData);
+                            WriteDeviceBlock(xDeviceName, yBlockSize, sensorData);
                             Console.WriteLine(retMsg); // Y0,0,0
                         }
 
@@ -123,13 +123,13 @@ namespace Server
         {
             string[] dataSplited = dataFromClient.Split(",");
 
-            int[] data = new int[blockNum];
+            int[] data = new int[blockNum]; // 2,3
             //data[0] = devices[0]; // xDevice 첫 번재 블록
             //data[1] = devices[1]; // xDevice 두 번째 블록
             data[0] = int.Parse(dataSplited[0]); // yDevice 첫 번재 블록
             data[1] = int.Parse(dataSplited[1]); // yDevice 두 번째 블록
 
-            // 0,0,0,170
+            // 0,170
             int ret = mxComponent.WriteDeviceBlock(deviceName, blockNum, ref data[0]);
 
             if (ret == 0)
