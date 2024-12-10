@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TCPServerFormEx")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+63f90b705f06fffbe5a3ffac9767f1562a5fbf33")]
 [assembly: System.Reflection.AssemblyProductAttribute("TCPServerFormEx")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TCPServerFormEx")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1747,7 +1747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 868db27a7da75d24fafdfa5d8b623b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 0}
+  input: {fileID: 2039065887}
   waitTime: 0.5
   obj: {fileID: 1955717501}
   pointA: {fileID: 1972106265}
