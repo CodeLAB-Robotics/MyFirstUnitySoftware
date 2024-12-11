@@ -285,8 +285,6 @@ public class TCPClient : MonoBehaviour
             }
         }
     }
-
-
     private void OnDestroy()
     {
         

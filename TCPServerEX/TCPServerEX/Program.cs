@@ -7,7 +7,7 @@ using ActUtlType64Lib;
 
 namespace Server
 {
-    class Program
+    class TCPServer
     {
         enum State
         {
@@ -16,21 +16,22 @@ namespace Server
         }
         static ActUtlType64 mxComponent;
         static State state = State.DISCONNECTED;
+        static int[] devices;
+        static TcpListener server;
+        static TcpClient client;
+        static NetworkStream stream;
 
         static void Main(string[] args)
         {
             mxComponent = new ActUtlType64();
             mxComponent.ActLogicalStationNumber = 1;
 
-
             // 서버 소켓 생성 및 바인딩
-            TcpListener server = new TcpListener(IPAddress.Any, 12345);
+            server = new TcpListener(IPAddress.Any, 12345);
             server.Start();
 
             Console.WriteLine("서버 시작");
 
-            TcpClient client;
-            NetworkStream stream;
             byte[] buffer = new byte[1024];
 
             while (true)
@@ -117,7 +118,6 @@ namespace Server
             client.Close();
         }
 
-        static int[] devices;
         // "SET,sensorNum,lsNum"  SET,Y0,0,170
         public static string WriteDeviceBlock(string deviceName, int blockNum, string dataFromClient)
         {

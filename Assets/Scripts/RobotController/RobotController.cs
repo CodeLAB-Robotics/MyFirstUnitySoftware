@@ -7,6 +7,7 @@ using System.Collections;
 using System.IO;
 using static RobotController;
 using System.Linq;
+using RobotStep = RobotController.Step;
 
 /// <summary>
 /// 로봇 3D Object를 RobotController의 버튼, 인풋필드의 값으로 움직인다.
@@ -53,6 +54,7 @@ public class RobotController : MonoBehaviour
             isSuctionOn = _isSuctionOn;
         }
     }
+
     public List<Step> steps = new List<Step>();
     [SerializeField] Step originStep;
     [SerializeField] Step eStopStep;
@@ -68,6 +70,11 @@ public class RobotController : MonoBehaviour
     [SerializeField] Transform motorAxis3;
     [SerializeField] Transform motorAxis4;
     [SerializeField] Transform motorAxis5;
+    float angleAxis1;
+    float angleAxis2;
+    float angleAxis3;
+    float angleAxis4;
+    float angleAxis5;
 
     [Header("UI 정리")]
     [SerializeField] TMP_Text nowStepInfoTxt;
@@ -87,6 +94,8 @@ public class RobotController : MonoBehaviour
 
     Coroutine currentCoroutine;
     int cycleClkCnt = 0;
+    bool isUpBtnPressed = false;
+    bool isDownBtnPressed = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -787,8 +796,7 @@ public class RobotController : MonoBehaviour
         }
     }
 
-    bool isUpBtnPressed = false;
-    bool isDownBtnPressed = false;
+
     /// <summary>
     /// 1. axis의 종류에 따라, UI에 있는 Axis Input의 값 변경
     /// 2. 변경되는 값을 실제 motorAxis1에 적용
@@ -816,11 +824,7 @@ public class RobotController : MonoBehaviour
         isDownBtnPressed = false;
     }
 
-    float angleAxis1;
-    float angleAxis2;
-    float angleAxis3;
-    float angleAxis4;
-    float angleAxis5;
+
     IEnumerator OnPointerUpStay(string axis)
     {
         while (isUpBtnPressed)

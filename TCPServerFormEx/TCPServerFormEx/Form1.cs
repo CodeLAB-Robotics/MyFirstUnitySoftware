@@ -23,7 +23,6 @@ namespace TCPServerFormEx
             mxComponent.ActLogicalStationNumber = 1; // Communication Setting에서 설정
         }
 
- 
         private void connectButton_Click(object sender, EventArgs e)
         {
             if (isRunning)
