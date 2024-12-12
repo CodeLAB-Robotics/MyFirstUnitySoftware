@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System;
 using Newtonsoft.Json;
 using static FirebaseDBManager;
+using TMPro;
+using NUnit.Framework.Constraints;
+using UnityEditor;
 
 /// <summary>
 /// Firebase Realtime DB에 접속해서 데이터를 보내고 받는다.
@@ -33,16 +36,53 @@ public class FirebaseDBManager : MonoBehaviour
     [SerializeField] string dbURL;
     [SerializeField] List<Book> 도서관;
     [SerializeField] List<Library> 도서관들;
+    [SerializeField] TMP_Text infoTxt;
+    [SerializeField] TMP_InputField infoInput;
     bool isReceived = false;
+
+    string studentInfoJson = @"{
+  ""student"" : {
+    ""0000"" : {
+      ""code"" : ""0000"",
+      ""grade"" : {
+        ""English"" : 50,
+        ""Korean"" : 70,
+        ""Math"" : 80,
+        ""Science"" : 90
+      },
+      ""info"" : {
+        ""age"" : 10,
+        ""gender"" : ""female"",
+        ""name"" : ""Ojui_1""
+      }
+    },
+    ""0001"" : {
+      ""code"" : ""0001"",
+      ""grade"" : {
+        ""English"" : 90,
+        ""Korean"" : 100,
+        ""Math"" : 50,
+        ""Science"" : 70
+      },
+      ""info"" : {
+        ""age"" : 11,
+        ""gender"" : ""male"",
+        ""name"" : ""Ojui_2""
+      }
+    }
+  }
+}";
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         FirebaseApp.DefaultInstance.Options.DatabaseUrl = new System.Uri(dbURL);
 
+        SetRawJsonValueAsync(studentInfoJson);
+
         //SendObjectByNewtonJson();
 
-        RequesObjectByNewtonJson();
+        //RequesObjectByNewtonJson();
     }
 
     void SetRawJsonValueAsync()
@@ -70,6 +110,195 @@ public class FirebaseDBManager : MonoBehaviour
 
         //dbRef.SetValueAsync("안녕하세요.");
         dbRef.SetRawJsonValueAsync(json);
+    }
+
+    void SetRawJsonValueAsync(string jsonFile)
+    {
+        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+
+        dbRef.SetRawJsonValueAsync(jsonFile);
+    }
+    
+    string totalInfo = "";
+    public void RequestStudentData()
+    {
+        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student");
+
+        totalInfo = "";
+
+        dbRef.GetValueAsync().ContinueWith(task =>
+        {
+            if(task.IsCanceled)
+            {
+                print("응답 취소");
+            }
+            else if(task.IsFaulted)
+            {
+                print("응답 실패");
+            }
+            else if(task.IsCompleted)
+            {
+                // 레코드(데이터)를 스냅샷 형태로 가져온다(저장)
+                DataSnapshot snapshot = task.Result;
+
+                foreach(var data in snapshot.Children) // student의 children 0000, 0001
+                {
+                    IDictionary studentData = (IDictionary)data.Value;
+                    totalInfo += $"code: {studentData["code"]}\n";
+
+                    DataSnapshot grade = data.Child("grade");
+                    IDictionary gradeData = (IDictionary)grade.Value;
+                    totalInfo += $"grade: Englise_{gradeData["English"]}" +
+                                 $"/Korean_{gradeData["Korean"]}" +
+                                 $"/Math_{gradeData["Math"]}" +
+                                 $"/Science_{gradeData["Science"]}\n";
+
+                    DataSnapshot info = data.Child("info");
+                    IDictionary infoData = (IDictionary)info.Value;
+                    totalInfo += $"info: Age_{infoData["age"]}" +
+                                 $"/Gender_{infoData["gender"]}" +
+                                 $"/Name_{infoData["name"]}\n";
+
+                    totalInfo += "--------------------------\n\n";
+                }
+
+                print(totalInfo);
+
+                isReceived = true;
+            }
+        });
+
+        StartCoroutine(UpdateData());
+    }
+
+    Query query;
+    public void SelectData()
+    {
+        if(infoInput.text == "")
+        {
+            print("정보를 입력해 주세요.");
+            
+            return;
+        }
+
+        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student");
+
+        // code에 해당하는 쿼리 찾기
+        query = dbRef.OrderByChild("code").EqualTo(infoInput.text);
+
+        query.ValueChanged += OnDataLoaded;
+    }
+
+    private void OnDataLoaded(object sender, ValueChangedEventArgs args)
+    {
+        DataSnapshot snapshot = args.Snapshot;
+
+        if (snapshot.ChildrenCount == 0)
+        {
+            print("해당 코드를 가진 학생 데이터 없음.");
+        }
+        else
+        {
+            // code: 0000, 0001
+            foreach (var data in snapshot.Children)
+            {
+                IDictionary studentData = (IDictionary)data.Value;
+                totalInfo += $"code: {studentData["code"]}\n";
+
+                DataSnapshot grade = data.Child("grade");
+                IDictionary gradeData = (IDictionary)grade.Value;
+                totalInfo += $"grade: Englise_{gradeData["English"]}" +
+                             $"/Korean_{gradeData["Korean"]}" +
+                             $"/Math_{gradeData["Math"]}" +
+                             $"/Science_{gradeData["Science"]}\n";
+
+                DataSnapshot info = data.Child("info");
+                IDictionary infoData = (IDictionary)info.Value;
+                totalInfo += $"info: Age_{infoData["age"]}" +
+                             $"/Gender_{infoData["gender"]}" +
+                             $"/Name_{infoData["name"]}\n";
+            }
+
+            infoTxt.text = totalInfo;
+        }
+
+        query.ValueChanged -= OnDataLoaded;
+    }
+
+    public void DeleteData()
+    {
+        if(infoTxt.text == "")
+        {
+            print("삭제하고 싶은 학생 코드를 입력해 주세요.");
+            return;
+        }
+
+        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student").Child(infoInput.text);
+
+        dbRef.RemoveValueAsync().ContinueWith(task =>
+        {
+            if(task.IsFaulted)
+            {
+                print("데이터 삭제에 실패하였습니다.");
+            }
+            else if(task.IsCompleted)
+            {
+                isReceived = true;
+
+                StartCoroutine(PrintDataDeleted());
+            }
+        });
+    }
+
+    IEnumerator PrintDataDeleted()
+    {
+        yield return new WaitUntil(() => isReceived);
+
+        isReceived = false;
+             
+        print("데이터가 삭제되었습니다.");
+    }
+
+    IEnumerator UpdateData()
+    {
+        yield return new WaitUntil(() => isReceived);
+
+        isReceived = false;
+
+        infoTxt.text = totalInfo;
+    }
+
+    void RequestData()
+    {
+        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+
+        dbRef.GetValueAsync().ContinueWith(LoadFunc); // 데이터 요청 후, 응답을 받으면 LoadFunc를 실행
+
+        void LoadFunc(Task<DataSnapshot> task)
+        {
+            if (task.IsCanceled)
+            {
+                print("DB 요청 취소");
+            }
+            else if (task.IsFaulted)
+            {
+                print("DB 요청 실패");
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                foreach (DataSnapshot item in snapshot.Children)
+                {
+                    string json = item.GetRawJsonValue();
+                    print("DB 응답 데이터: " + json);
+                }
+
+                print("DB 요청 완료");
+
+                isReceived = true;
+            }
+        }
     }
 
     void SendJsonFile(string filePath, string refName)
@@ -241,39 +470,6 @@ public class FirebaseDBManager : MonoBehaviour
                 }
             }
         });
-    }
-
-    void RequestData()
-    {
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-
-        dbRef.GetValueAsync().ContinueWith(LoadFunc); // 데이터 요청 후, 응답을 받으면 LoadFunc를 실행
-
-        void LoadFunc(Task<DataSnapshot> task)
-        {
-            if (task.IsCanceled)
-            {
-                print("DB 요청 취소");
-            }
-            else if (task.IsFaulted)
-            {
-                print("DB 요청 실패");
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-
-                foreach (DataSnapshot item in snapshot.Children)
-                {
-                    string json = item.GetRawJsonValue();
-                    print("DB 응답 데이터: " + json);
-                }
-
-                print("DB 요청 완료");
-
-                isReceived = true;
-            }
-        }
     }
 
     void RequestJsonToDictionary(string refName)
