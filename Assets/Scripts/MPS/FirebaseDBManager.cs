@@ -161,12 +161,12 @@ namespace MPS
 
             if (dbRef != null)
             {
-                StartCoroutine(CoUploadData());
+                //StartCoroutine(CoUploadData());
             }
 
-            InvokeRepeating("InitializeData", 0, 1);
+            //InvokeRepeating("InitializeData", 0, 3);
             //InitializeData();
-            //UploadData();
+            UploadData();
         }
 
         void InitializeData()
@@ -175,8 +175,29 @@ namespace MPS
             
             if (dbRef != null)
             {
-                print(dataFormat);
-                dbRef.SetRawJsonValueAsync(dataFormat);
+                sb.Clear();
+
+                sb.Append($"{{\"timeStamp\":\"{mPSManager.timeStamp.ToString()}\",");
+                sb.Append($"\"id\":\"{mPSManager.id}\",");
+                sb.Append($"\"isRunning\":{(mPSManager.isRunning == true ? "true" : "false")},");
+                sb.Append($"\"ProductLines\":[{JsonConvert.SerializeObject(mPSManager.productLines[0])}," +
+                    $"{JsonConvert.SerializeObject(mPSManager.productLines[1])}," +
+                    $"{JsonConvert.SerializeObject(mPSManager.productLines[2])}," +
+                    $"{JsonConvert.SerializeObject(mPSManager.productLines[3])}," +
+                    $"{JsonConvert.SerializeObject(mPSManager.productLines[4])}," +
+                    $"{JsonConvert.SerializeObject(mPSManager.productLines[5])}," +
+                    $"{JsonConvert.SerializeObject(mPSManager.productLines[6])}],");
+                sb.Append($"\"PalletizingLines\":[{JsonConvert.SerializeObject(mPSManager.palletizingLines[0])}," +
+                          $"{JsonConvert.SerializeObject(mPSManager.palletizingLines[1])}],");
+                sb.Append($"\"Inventory\":[{JsonConvert.SerializeObject(mPSManager.inventory)}],");
+                sb.Append($"\"EnergyConsumption\":[{JsonConvert.SerializeObject(mPSManager.energyConsumption)}],");
+                sb.Append($"\"EnvironmentData\":[{JsonConvert.SerializeObject(mPSManager.environmentData)}]}}");
+
+                string json = sb.ToString();
+                print(json);
+
+                //print(dataFormat);
+                dbRef.SetRawJsonValueAsync(json);
             }
         }
 
@@ -221,7 +242,9 @@ namespace MPS
             //    ""EnvironmentData"":{JsonConvert.SerializeObject(mPSManager.environmentData)}
             //}}";
 
-            sb.Append($"{{\"timeStamp\":\"{ mPSManager.timeStamp.ToString()}\",");
+            sb.Clear();
+
+            sb.Append($"{{\"timeStamp\":\"{mPSManager.timeStamp.ToString()}\",");
             sb.Append($"\"id\":\"{mPSManager.id}\",");
             sb.Append($"\"isRunning\":{mPSManager.isRunning},");
             sb.Append($"\"ProductLines\":[{JsonConvert.SerializeObject(mPSManager.productLines[0])}," +
