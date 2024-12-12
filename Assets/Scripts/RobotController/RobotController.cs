@@ -78,8 +78,12 @@ public class RobotController : MonoBehaviour
 
     [Header("UI 정리")]
     [SerializeField] TMP_Text nowStepInfoTxt;
-    [SerializeField] int totalSteps;
+    public int totalSteps;
     public int currentStepNumber;
+    public int cycleCnt;
+    public float cycleTime;
+    public DateTime lastMaintenanceTime;
+    public DateTime nextMaintenanceTime;
     [SerializeField] TMP_InputField stepInput;
     [SerializeField] TMP_InputField speedInput;
     [SerializeField] TMP_InputField durationInput;
@@ -253,8 +257,10 @@ public class RobotController : MonoBehaviour
         {
             if (isRunning) return;
 
-                // 각 스탭에 따라 로봇의 모터가 움직여야 한다.
-                currentCoroutine = StartCoroutine(Run());
+            // 각 스탭에 따라 로봇의 모터가 움직여야 한다.
+            currentCoroutine = StartCoroutine(Run());
+
+            cycleCnt++;
         }
 
         SetButtonsActive(false);
@@ -330,6 +336,8 @@ public class RobotController : MonoBehaviour
         if (isRunning) return;
 
         StartCoroutine(RunOrigin(steps[steps.Count - 1], originStep));
+
+        cycleCnt++;
     }
 
     IEnumerator Run()
@@ -431,6 +439,8 @@ public class RobotController : MonoBehaviour
             motorAxis4.localRotation = RotateAngle(prevAxis4Euler, nextAxis4AEuler, currentTime / (prevStep.speed * 0.01f));
             motorAxis5.localRotation = RotateAngle(prevAxis5Euler, nextAxis5AEuler, currentTime / (prevStep.speed * 0.01f));
 
+            cycleTime += Time.deltaTime;
+
             yield return new WaitForEndOfFrame();
         }
 
@@ -442,6 +452,9 @@ public class RobotController : MonoBehaviour
             eStopStep.angleAxis3 = motorAxis3.localRotation.eulerAngles.z;
             eStopStep.angleAxis4 = motorAxis4.localRotation.eulerAngles.x;
             eStopStep.angleAxis5 = motorAxis5.localRotation.eulerAngles.z;
+
+            cycleTime += Time.deltaTime;
+
         }
 
         yield return new WaitForSeconds(prevStep.duration);
@@ -482,6 +495,8 @@ public class RobotController : MonoBehaviour
             motorAxis4.localRotation = RotateAngle(prevAxis4Euler, nextAxis4AEuler, currentTime / (prevStep.speed * 0.01f));
             motorAxis5.localRotation = RotateAngle(prevAxis5Euler, nextAxis5AEuler, currentTime / (prevStep.speed * 0.01f));
 
+            cycleTime += Time.deltaTime;
+
             yield return new WaitForEndOfFrame();
         }
 
@@ -495,6 +510,7 @@ public class RobotController : MonoBehaviour
             eStopStep.angleAxis5 = motorAxis5.localRotation.eulerAngles.z;
         }
 
+        cycleTime += Time.deltaTime;
 
         yield return new WaitForSeconds(prevStep.duration);
 

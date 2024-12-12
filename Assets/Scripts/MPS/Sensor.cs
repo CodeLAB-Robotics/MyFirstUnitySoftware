@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace MPS
 {
@@ -16,6 +17,10 @@ namespace MPS
         }
         public SensorType sensorType = SensorType.근접센서;
         public bool isEnabled = false;
+        public int cycleCnt;
+        public float cycleTime;
+        public DateTime lastMaintenanceTime;
+        public DateTime nextMaintenanceTime;
 
         private void OnTriggerStay(Collider other)
         {
@@ -23,6 +28,8 @@ namespace MPS
             {
                 isEnabled = true;
                 print("물체 감지");
+
+                cycleTime += Time.deltaTime;
             }
             else if(sensorType == SensorType.유도형센서)
             {
@@ -31,6 +38,8 @@ namespace MPS
                     isEnabled = true;
                     print("금속 감지");
                 }
+
+                cycleTime += Time.deltaTime;
             }
         }
 
@@ -38,6 +47,8 @@ namespace MPS
         {
             if (isEnabled)
                 isEnabled = false;
+
+            cycleCnt++;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿#define TCPServerVersion // MxComponentVersion or TCPServerVersion
+﻿#define MxComponentVersion // MxComponentVersion or TCPServerVersion
 
 using System;
 using System.Collections;
@@ -13,6 +13,63 @@ namespace MPS
     /// </summary>
     public class MPSManager : MonoBehaviour
     {
+        public class ProductLine
+        {
+            public string id;
+            public bool isRunning;
+            public float duration;
+            public bool lsForward;
+            public bool lsBackward;
+            public int cycleCnt;
+            public float cycleTime;
+            public string lastMaintenanceTime;
+            public string nextMaintenanceTime;
+
+            public ProductLine(string id)
+            {
+                this.id = id;
+            }
+        }
+
+        public class PalletizingLine
+        {
+            public string id;
+            public bool isRunning;
+            public int stepCnt;
+            public int cycleCnt;
+            public float cycleTime;
+            public string lastMaintenanceTime;
+            public string nextMaintenanceTime;
+
+            public PalletizingLine(string id)
+            {
+                this.id = id;
+            }
+        }
+
+        public class Inventory
+        {
+            public int expectedProducts;
+            public int finishedProducts;
+            public int failedProducts;
+            public int rawMaterial;
+        }
+
+        public class EnergyConsumption
+        {
+            public float mps;
+            public float robots;
+            public float total;
+        }
+
+        public class EnvironmentData
+        {
+            public float temperture;
+            public float humidity;
+            public float airQulity;
+        }
+
+
         [Header("Facilities")]
         [SerializeField] List<Cylinder> cylinders = new List<Cylinder>();
         [SerializeField] List<MeshRenderer> lamps = new List<MeshRenderer>();
@@ -22,17 +79,44 @@ namespace MPS
         [SerializeField] int startBtnState = 0;
         [SerializeField] int stopBtnState = 0;
         [SerializeField] int eStopBtnState = 0;
+        bool isConveyorRunning;
+        int convyorCycleCnt;
+        DateTime convyorLastMaintenanceTime;
+        DateTime convyorNextMaintenanceTime;
 
         [Space(20)]
         [Header("Etc")]
         [SerializeField] GameObject[] objPrefabs;
         [SerializeField] Transform spawnPos;
+
+        [Space(20)]
+        [Header("DB Data")]
+        public DateTime timeStamp;
+        public string id = "Smart Factory 1";
+        public bool isRunning;
+        public List<ProductLine> productLines = new List<ProductLine>();
+        public List<PalletizingLine> palletizingLines = new List<PalletizingLine>();
+        public Inventory inventory = new Inventory();
+        public EnergyConsumption energyConsumption = new EnergyConsumption();
+        public EnvironmentData environmentData = new EnvironmentData();
+        
+        public ProductLine 컨베이어Data = new ProductLine("컨베이어");
+        public ProductLine 공급센서Data = new ProductLine("공급센서");
+        public ProductLine 물체확인센서Data = new ProductLine("물체확인센서");
+        public ProductLine 금속확인센서Data = new ProductLine("금속확인센서");
+        public ProductLine 공급실린더Data = new ProductLine("공급실린더");
+        public ProductLine 가공실린더Data = new ProductLine("가공실린더");
+        public ProductLine 송출실린더Data = new ProductLine("송출실린더");
+        public ProductLine 배출실린더Data = new ProductLine("배출실린더");
+        public PalletizingLine 로봇AData = new PalletizingLine("RobotA");
+        public PalletizingLine 로봇BData = new PalletizingLine("RobotB");
+
         int count;
         Color redLamp;
         Color yellowLamp;
         Color greenLamp;
 
-        private void Start()
+        private void Awake()
         {
             redLamp = lamps[0].material.GetColor("_BaseColor");
             yellowLamp = lamps[1].material.GetColor("_BaseColor");
@@ -41,6 +125,19 @@ namespace MPS
             OnLampOnOffBtnClkEvent("Red", false);
             OnLampOnOffBtnClkEvent("Yellow", false);
             OnLampOnOffBtnClkEvent("Green", false);
+
+
+            timeStamp = DateTime.Now;
+            productLines.Add(공급실린더Data);
+            productLines.Add(가공실린더Data);
+            productLines.Add(송출실린더Data);
+            productLines.Add(배출실린더Data);
+            productLines.Add(컨베이어Data);
+            productLines.Add(공급센서Data);
+            productLines.Add(물체확인센서Data);
+            productLines.Add(금속확인센서Data);
+            palletizingLines.Add(로봇AData);
+            palletizingLines.Add(로봇BData);
         }
 
         private void Update()
@@ -115,6 +212,16 @@ namespace MPS
 
                 if (컨베이어CW회전 == 1)
                 {
+                    if (!isConveyorRunning)
+                    {
+                        isConveyorRunning = true;
+                        컨베이어Data.isRunning = isConveyorRunning;
+                        컨베이어Data.lsForward = true;
+                        convyorCycleCnt++;
+                    }
+                    
+                    컨베이어Data.cycleTime += Time.deltaTime;
+
                     foreach (var pusher in pushers)
                     {
                         pusher.Move(true);
@@ -122,6 +229,16 @@ namespace MPS
                 }
                 else if (컨베이어CCW회전 == 1)
                 {
+                    if (!isConveyorRunning)
+                    {
+                        isConveyorRunning = true;
+                        컨베이어Data.isRunning = isConveyorRunning;
+                        컨베이어Data.lsBackward = true;
+                        convyorCycleCnt++;
+                    }
+
+                    컨베이어Data.cycleTime += Time.deltaTime;
+
                     foreach (var pusher in pushers)
                     {
                         pusher.Move(false);
@@ -130,6 +247,16 @@ namespace MPS
 
                 if (컨베이어STOP == 1)
                 {
+                    if (isConveyorRunning)
+                    {
+                        isConveyorRunning = false;
+                        컨베이어Data.isRunning = isConveyorRunning;
+                        컨베이어Data.lsForward = false;
+                        컨베이어Data.lsBackward = false;
+
+                        convyorCycleCnt++;
+                    }
+
                     foreach (var pusher in pushers)
                     {
                         pusher.Stop();
@@ -189,6 +316,39 @@ namespace MPS
 
                 MxComponent.Instance.xDevices = xDeviceValue;
 
+                isRunning = startBtnState == 1 ? true : false;
+
+                공급센서Data.isRunning = sensors[0].isEnabled;
+                물체확인센서Data.isRunning = sensors[1].isEnabled;
+                금속확인센서Data.isRunning = sensors[2].isEnabled;
+
+                공급실린더Data.isRunning = cylinders[0].isRodMoving;
+                공급실린더Data.lsForward = cylinders[0].isForwardLSOn;
+                공급실린더Data.lsBackward = cylinders[0].isBackwardLSOn;
+                공급실린더Data.cycleCnt = cylinders[0].cycleCnt;
+                공급실린더Data.cycleTime = cylinders[0].cycleTime;
+
+                가공실린더Data.isRunning = cylinders[1].isRodMoving;
+                가공실린더Data.lsForward = cylinders[1].isForwardLSOn;
+                가공실린더Data.lsBackward = cylinders[1].isBackwardLSOn;
+                가공실린더Data.cycleCnt = cylinders[1].cycleCnt;
+                가공실린더Data.cycleTime = cylinders[1].cycleTime;
+
+                송출실린더Data.isRunning = cylinders[2].isRodMoving;
+                송출실린더Data.lsForward = cylinders[2].isForwardLSOn;
+                송출실린더Data.lsBackward = cylinders[2].isBackwardLSOn;
+                송출실린더Data.cycleCnt = cylinders[2].cycleCnt;
+                송출실린더Data.cycleTime = cylinders[2].cycleTime;
+
+                배출실린더Data.isRunning = cylinders[3].isRodMoving;
+                배출실린더Data.lsForward = cylinders[3].isForwardLSOn;
+                배출실린더Data.lsBackward = cylinders[3].isBackwardLSOn;
+                배출실린더Data.cycleCnt = cylinders[3].cycleCnt;
+                배출실린더Data.cycleTime = cylinders[3].cycleTime;
+
+                로봇AData.isRunning = robotController[0].isRunning;
+                로봇BData.isRunning = robotController[1].isRunning;
+
 #elif TCPServerVersion
 
                 // PLC의 x device를 업데이트
@@ -210,6 +370,7 @@ namespace MPS
                                       $"{(robotController[0].isRunning == true ? 1 : 0)}" +   // 현재 로봇의 작동여부(X0E)
                                       $"{(robotController[1].isRunning == true ? 1 : 0)}";    // 현재 로봇의 작동여부(X0F) 
 
+
                 for (int i = 1; i < TCPClient.Instance.xDeviceBlockSize; i++)
                 {
                     xDeviceValue += "0000000000000000";
@@ -217,6 +378,38 @@ namespace MPS
 
                 TCPClient.Instance.xDevices = xDeviceValue;
 
+                isRunning = startBtnState == 1 ? true : false;
+
+                공급센서Data.isRunning     = sensors[0].isEnabled;
+                물체확인센서Data.isRunning = sensors[1].isEnabled;
+                금속확인센서Data.isRunning = sensors[2].isEnabled;
+
+                공급실린더Data.isRunning   = cylinders[0].isRodMoving;
+                공급실린더Data.lsForward   = cylinders[0].isForwardLSOn;
+                공급실린더Data.lsBackward  = cylinders[0].isBackwardLSOn;
+                공급실린더Data.cycleCnt    = cylinders[0].cycleCnt;
+                공급실린더Data.cycleTime   = cylinders[0].cycleTime;
+
+                가공실린더Data.isRunning   = cylinders[1].isRodMoving;
+                가공실린더Data.lsForward   = cylinders[1].isForwardLSOn;
+                가공실린더Data.lsBackward  = cylinders[1].isBackwardLSOn;
+                가공실린더Data.cycleCnt    = cylinders[1].cycleCnt;
+                가공실린더Data.cycleTime   = cylinders[1].cycleTime;
+
+                송출실린더Data.isRunning   = cylinders[2].isRodMoving;
+                송출실린더Data.lsForward   = cylinders[2].isForwardLSOn;
+                송출실린더Data.lsBackward  = cylinders[2].isBackwardLSOn;
+                송출실린더Data.cycleCnt    = cylinders[2].cycleCnt;
+                송출실린더Data.cycleTime   = cylinders[2].cycleTime;
+
+                배출실린더Data.isRunning   = cylinders[3].isRodMoving;
+                배출실린더Data.lsForward   = cylinders[3].isForwardLSOn;
+                배출실린더Data.lsBackward  = cylinders[3].isBackwardLSOn;
+                배출실린더Data.cycleCnt    = cylinders[3].cycleCnt;
+                배출실린더Data.cycleTime   = cylinders[3].cycleTime;
+
+                로봇AData.isRunning        = robotController[0].isRunning;
+                로봇BData.isRunning        = robotController[1].isRunning;
 #endif
             }
 

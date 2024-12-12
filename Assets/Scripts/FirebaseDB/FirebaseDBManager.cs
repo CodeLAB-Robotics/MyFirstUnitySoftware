@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using Firebase;
 using Firebase.Database;
 using System.Threading.Tasks;
@@ -9,139 +9,273 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System;
 using Newtonsoft.Json;
-using static FirebaseDBManager;
 using TMPro;
 using NUnit.Framework.Constraints;
 using UnityEditor;
+using JetBrains.Annotations;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 
-/// <summary>
-/// Firebase Realtime DBø° ¡¢º”«ÿº≠ µ•¿Ã≈Õ∏¶ ∫∏≥ª∞Ì πﬁ¥¬¥Ÿ.
-/// « ø‰º”º∫: dbURL
-/// </summary>
-public class FirebaseDBManager : MonoBehaviour
+
+// FirebaseDB ÏòàÏ†úÏûÖÎãàÎã§.
+namespace FirebaseDB
 {
-    [Serializable]
-    public class Library
+    /// <summary>
+    /// Firebase Realtime DBÏóê Ï†ëÏÜçÌï¥ÏÑú Îç∞Ïù¥ÌÑ∞Î•º Î≥¥ÎÇ¥Í≥† Î∞õÎäîÎã§.
+    /// ÌïÑÏöîÏÜçÏÑ±: dbURL
+    /// </summary>
+    public class FirebaseDBManager : MonoBehaviour
     {
-        public Dictionary<string, Book> library = new Dictionary<string, Book>();
-    }
-
-    [Serializable]
-    public class Book
-    {
-        public string name;
-        public string bookNumber;
-    }
-
-    [SerializeField] string dbURL;
-    [SerializeField] List<Book> µµº≠∞¸;
-    [SerializeField] List<Library> µµº≠∞¸µÈ;
-    [SerializeField] TMP_Text infoTxt;
-    [SerializeField] TMP_InputField infoInput;
-    bool isReceived = false;
-
-    string studentInfoJson = @"{
-  ""student"" : {
-    ""0000"" : {
-      ""code"" : ""0000"",
-      ""grade"" : {
-        ""English"" : 50,
-        ""Korean"" : 70,
-        ""Math"" : 80,
-        ""Science"" : 90
-      },
-      ""info"" : {
-        ""age"" : 10,
-        ""gender"" : ""female"",
-        ""name"" : ""Ojui_1""
-      }
-    },
-    ""0001"" : {
-      ""code"" : ""0001"",
-      ""grade"" : {
-        ""English"" : 90,
-        ""Korean"" : 100,
-        ""Math"" : 50,
-        ""Science"" : 70
-      },
-      ""info"" : {
-        ""age"" : 11,
-        ""gender"" : ""male"",
-        ""name"" : ""Ojui_2""
-      }
-    }
-  }
-}";
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        FirebaseApp.DefaultInstance.Options.DatabaseUrl = new System.Uri(dbURL);
-
-        SetRawJsonValueAsync(studentInfoJson);
-
-        //SendObjectByNewtonJson();
-
-        //RequesObjectByNewtonJson();
-    }
-
-    void SetRawJsonValueAsync()
-    {
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-
-        // JSON ∆ƒ¿œ ∆˜∏‰
-        string json = 
-        @"{
-            ""array"":[
-                1,
-                2,
-                3
-            ],
-            ""boolean"":true,
-            ""color"":""gold"",
-            ""null"":null,
-            ""number"":123,
-            ""object"":{
-                ""a"":""b"",
-                ""c"":""d""
-            },
-            ""string"":""Hello World""
-        }";
-
-        //dbRef.SetValueAsync("æ»≥Á«œººø‰.");
-        dbRef.SetRawJsonValueAsync(json);
-    }
-
-    void SetRawJsonValueAsync(string jsonFile)
-    {
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-
-        dbRef.SetRawJsonValueAsync(jsonFile);
-    }
-    
-    string totalInfo = "";
-    public void RequestStudentData()
-    {
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student");
-
-        totalInfo = "";
-
-        dbRef.GetValueAsync().ContinueWith(task =>
+        [Serializable]
+        public class Library
         {
-            if(task.IsCanceled)
-            {
-                print("¿¿¥‰ √Îº“");
-            }
-            else if(task.IsFaulted)
-            {
-                print("¿¿¥‰ Ω«∆–");
-            }
-            else if(task.IsCompleted)
-            {
-                // ∑πƒ⁄µÂ(µ•¿Ã≈Õ)∏¶ Ω∫≥¿º¶ «¸≈¬∑Œ ∞°¡Æø¬¥Ÿ(¿˙¿Â)
-                DataSnapshot snapshot = task.Result;
+            public Dictionary<string, Book> library = new Dictionary<string, Book>();
+        }
 
-                foreach(var data in snapshot.Children) // student¿« children 0000, 0001
+        [Serializable]
+        public class Book
+        {
+            public string name;
+            public string bookNumber;
+        }
+
+        [SerializeField] string dbURL;
+        [SerializeField] List<Book> ÎèÑÏÑúÍ¥Ä;
+        [SerializeField] List<Library> ÎèÑÏÑúÍ¥ÄÎì§;
+        [SerializeField] TMP_Text infoTxt;
+        [SerializeField] TMP_InputField infoInput;
+        [SerializeField] TMP_InputField jsonPathInput;
+        bool isReceived = false;
+        Query query;
+
+        string studentInfoJson = @"{
+      ""student"" : {
+        ""0000"" : {
+          ""code"" : ""0000"",
+          ""grade"" : {
+            ""English"" : 50,
+            ""Korean"" : 70,
+            ""Math"" : 80,
+            ""Science"" : 90
+          },
+          ""info"" : {
+            ""age"" : 10,
+            ""gender"" : ""female"",
+            ""name"" : ""Ojui_1""
+          }
+        },
+        ""0001"" : {
+          ""code"" : ""0001"",
+          ""grade"" : {
+            ""English"" : 90,
+            ""Korean"" : 100,
+            ""Math"" : 50,
+            ""Science"" : 70
+          },
+          ""info"" : {
+            ""age"" : 11,
+            ""gender"" : ""male"",
+            ""name"" : ""Ojui_2""
+          }
+        }
+      }
+    }";
+
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            FirebaseApp.DefaultInstance.Options.DatabaseUrl = new System.Uri(dbURL);
+
+            SetRawJsonValueAsync(studentInfoJson);
+
+            QueryJsonFile();
+
+            //SendObjectByNewtonJson();
+
+            //RequesObjectByNewtonJson();
+        }
+
+        public void QueryJsonFile()
+        {
+            string studentInfoJson = @"{
+                                              ""student"" : {
+                                                ""0000"" : {
+                                                  ""code"" : ""0000"",
+                                                  ""grade"" : {
+                                                    ""English"" : 50,
+                                                    ""Korean"" : 70,
+                                                    ""Math"" : 80,
+                                                    ""Science"" : 90
+                                                  },
+                                                  ""info"" : {
+                                                    ""age"" : 10,
+                                                    ""gender"" : ""female"",
+                                                    ""name"" : ""Ojui_1""
+                                                  }
+                                                },
+                                                ""0001"" : {
+                                                  ""code"" : ""0001"",
+                                                  ""grade"" : {
+                                                    ""English"" : 90,
+                                                    ""Korean"" : 100,
+                                                    ""Math"" : 50,
+                                                    ""Science"" : 70
+                                                  },
+                                                  ""info"" : {
+                                                    ""age"" : 11,
+                                                    ""gender"" : ""male"",
+                                                    ""name"" : ""Ojui_2""
+                                                  },
+                                                  ""Array"":[
+                                                        1,
+                                                        2,
+                                                        3
+                                                  ]
+                                                }
+                                              }
+                                            }";
+
+            JObject info = JObject.Parse(studentInfoJson);
+
+            string student1Code = (string)info["student"]["0000"]["code"]; // 0000
+            print(student1Code);
+            string student1English = (string)info["student"]["0000"]["grade"]["English"]; // 50
+            print(student1English);
+            string student2Array = (string)info["student"]["0001"]["Array"][0]; // 1
+            print(student2Array);
+
+            JArray stu2Array = (JArray)info["student"]["0001"]["Array"];
+            IList<int> stu2List = stu2Array.Select(value => (int)value).ToList();
+
+            print(stu2List[0]); // 1
+            print(stu2List[1]); // 2
+        }
+
+        void SetRawJsonValueAsync()
+        {
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+
+            // JSON ÌååÏùº Ìè¨Î©ß
+            string json = @"{
+                ""array"":[
+                    1,
+                    2,
+                    3
+                ],
+                ""boolean"":true,
+                ""color"":""gold"",
+                ""null"":null,
+                ""number"":123,
+                ""object"":{
+                    ""a"":""b"",
+                    ""c"":""d""
+                },
+                ""string"":""Hello World""
+            }";
+
+            //dbRef.SetValueAsync("ÏïàÎÖïÌïòÏÑ∏Ïöî.");
+            dbRef.SetRawJsonValueAsync(json);
+        }
+
+        void SetRawJsonValueAsync(string jsonFile)
+        {
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+
+            dbRef.SetRawJsonValueAsync(jsonFile);
+        }
+    
+        string totalInfo = "";
+        public void RequestStudentData()
+        {
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student");
+
+            totalInfo = "";
+
+            dbRef.GetValueAsync().ContinueWith(task =>
+            {
+                if(task.IsCanceled)
+                {
+                    print("ÏùëÎãµ Ï∑®ÏÜå");
+                }
+                else if(task.IsFaulted)
+                {
+                    print("ÏùëÎãµ Ïã§Ìå®");
+                }
+                else if(task.IsCompleted)
+                {
+                    // Î†àÏΩîÎìú(Îç∞Ïù¥ÌÑ∞)Î•º Ïä§ÎÉÖÏÉ∑ ÌòïÌÉúÎ°ú Í∞ÄÏ†∏Ïò®Îã§(Ï†ÄÏû•)
+                    DataSnapshot snapshot = task.Result;
+
+                    foreach(var data in snapshot.Children) // studentÏùò children 0000, 0001
+                    {
+                        IDictionary studentData = (IDictionary)data.Value;
+                        totalInfo += $"code: {studentData["code"]}\n";
+
+                        DataSnapshot grade = data.Child("grade");
+                        IDictionary gradeData = (IDictionary)grade.Value;
+                        totalInfo += $"grade: Englise_{gradeData["English"]}" +
+                                     $"/Korean_{gradeData["Korean"]}" +
+                                     $"/Math_{gradeData["Math"]}" +
+                                     $"/Science_{gradeData["Science"]}\n";
+
+                        DataSnapshot info = data.Child("info");
+                        IDictionary infoData = (IDictionary)info.Value;
+                        totalInfo += $"info: Age_{infoData["age"]}" +
+                                     $"/Gender_{infoData["gender"]}" +
+                                     $"/Name_{infoData["name"]}\n";
+
+                        totalInfo += "--------------------------\n\n";
+                    }
+
+                    print(totalInfo);
+
+                    isReceived = true;
+                }
+            });
+
+            StartCoroutine(UpdateData());
+        }
+
+        IEnumerator UpdateData()
+        {
+            yield return new WaitUntil(() => isReceived);
+
+            isReceived = false;
+
+            infoTxt.text = totalInfo;
+        }
+
+        public void SelectData()
+        {
+            if(infoInput.text == "")
+            {
+                print("Ï†ïÎ≥¥Î•º ÏûÖÎ†•Ìï¥ Ï£ºÏÑ∏Ïöî.");
+            
+                return;
+            }
+
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student");
+
+            // codeÏóê Ìï¥ÎãπÌïòÎäî ÏøºÎ¶¨ Ï∞æÍ∏∞
+            query = dbRef.OrderByChild("code").EqualTo(infoInput.text);
+
+            query.ValueChanged += OnDataLoaded;
+        }
+
+        private void OnDataLoaded(object sender, ValueChangedEventArgs args)
+        {
+            DataSnapshot snapshot = args.Snapshot;
+
+            totalInfo = "";
+
+            if (snapshot.ChildrenCount == 0)
+            {
+                print("Ìï¥Îãπ ÏΩîÎìúÎ•º Í∞ÄÏßÑ ÌïôÏÉù Îç∞Ïù¥ÌÑ∞ ÏóÜÏùå.");
+            }
+            else
+            {
+                // code: 0000, 0001
+                foreach (var data in snapshot.Children)
                 {
                     IDictionary studentData = (IDictionary)data.Value;
                     totalInfo += $"code: {studentData["code"]}\n";
@@ -158,347 +292,306 @@ public class FirebaseDBManager : MonoBehaviour
                     totalInfo += $"info: Age_{infoData["age"]}" +
                                  $"/Gender_{infoData["gender"]}" +
                                  $"/Name_{infoData["name"]}\n";
-
-                    totalInfo += "--------------------------\n\n";
                 }
 
-                print(totalInfo);
-
-                isReceived = true;
+                infoTxt.text = totalInfo;
             }
-        });
 
-        StartCoroutine(UpdateData());
-    }
-
-    Query query;
-    public void SelectData()
-    {
-        if(infoInput.text == "")
-        {
-            print("¡§∫∏∏¶ ¿‘∑¬«ÿ ¡÷ººø‰.");
-            
-            return;
+            query.ValueChanged -= OnDataLoaded;
         }
 
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student");
-
-        // codeø° «ÿ¥Á«œ¥¬ ƒı∏Æ √£±‚
-        query = dbRef.OrderByChild("code").EqualTo(infoInput.text);
-
-        query.ValueChanged += OnDataLoaded;
-    }
-
-    private void OnDataLoaded(object sender, ValueChangedEventArgs args)
-    {
-        DataSnapshot snapshot = args.Snapshot;
-
-        if (snapshot.ChildrenCount == 0)
+        public void DeleteData()
         {
-            print("«ÿ¥Á ƒ⁄µÂ∏¶ ∞°¡¯ «–ª˝ µ•¿Ã≈Õ æ¯¿Ω.");
-        }
-        else
-        {
-            // code: 0000, 0001
-            foreach (var data in snapshot.Children)
+            if(infoTxt.text == "")
             {
-                IDictionary studentData = (IDictionary)data.Value;
-                totalInfo += $"code: {studentData["code"]}\n";
-
-                DataSnapshot grade = data.Child("grade");
-                IDictionary gradeData = (IDictionary)grade.Value;
-                totalInfo += $"grade: Englise_{gradeData["English"]}" +
-                             $"/Korean_{gradeData["Korean"]}" +
-                             $"/Math_{gradeData["Math"]}" +
-                             $"/Science_{gradeData["Science"]}\n";
-
-                DataSnapshot info = data.Child("info");
-                IDictionary infoData = (IDictionary)info.Value;
-                totalInfo += $"info: Age_{infoData["age"]}" +
-                             $"/Gender_{infoData["gender"]}" +
-                             $"/Name_{infoData["name"]}\n";
+                print("ÏÇ≠Ï†úÌïòÍ≥† Ïã∂ÏùÄ ÌïôÏÉù ÏΩîÎìúÎ•º ÏûÖÎ†•Ìï¥ Ï£ºÏÑ∏Ïöî.");
+                return;
             }
 
-            infoTxt.text = totalInfo;
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student").Child(infoInput.text);
+
+            dbRef.RemoveValueAsync().ContinueWith(task =>
+            {
+                if(task.IsFaulted)
+                {
+                    print("Îç∞Ïù¥ÌÑ∞ ÏÇ≠Ï†úÏóê Ïã§Ìå®ÌïòÏòÄÏäµÎãàÎã§.");
+                }
+                else if(task.IsCompleted)
+                {
+                    isReceived = true;
+                }
+            });
+
+            StartCoroutine(PrintDataDeleted());
         }
 
-        query.ValueChanged -= OnDataLoaded;
-    }
-
-    public void DeleteData()
-    {
-        if(infoTxt.text == "")
+        IEnumerator PrintDataDeleted()
         {
-            print("ªË¡¶«œ∞Ì ΩÕ¿∫ «–ª˝ ƒ⁄µÂ∏¶ ¿‘∑¬«ÿ ¡÷ººø‰.");
-            return;
-        }
+            yield return new WaitUntil(() => isReceived);
 
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student").Child(infoInput.text);
-
-        dbRef.RemoveValueAsync().ContinueWith(task =>
-        {
-            if(task.IsFaulted)
-            {
-                print("µ•¿Ã≈Õ ªË¡¶ø° Ω«∆–«œø¥Ω¿¥œ¥Ÿ.");
-            }
-            else if(task.IsCompleted)
-            {
-                isReceived = true;
-
-                StartCoroutine(PrintDataDeleted());
-            }
-        });
-    }
-
-    IEnumerator PrintDataDeleted()
-    {
-        yield return new WaitUntil(() => isReceived);
-
-        isReceived = false;
+            isReceived = false;
              
-        print("µ•¿Ã≈Õ∞° ªË¡¶µ«æ˙Ω¿¥œ¥Ÿ.");
-    }
+            print("Îç∞Ïù¥ÌÑ∞Í∞Ä ÏÇ≠Ï†úÎêòÏóàÏäµÎãàÎã§.");
+        }
 
-    IEnumerator UpdateData()
-    {
-        yield return new WaitUntil(() => isReceived);
-
-        isReceived = false;
-
-        infoTxt.text = totalInfo;
-    }
-
-    void RequestData()
-    {
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-
-        dbRef.GetValueAsync().ContinueWith(LoadFunc); // µ•¿Ã≈Õ ø‰√ª »ƒ, ¿¿¥‰¿ª πﬁ¿∏∏È LoadFunc∏¶ Ω««‡
-
-        void LoadFunc(Task<DataSnapshot> task)
+        public void InsertData()
         {
-            if (task.IsCanceled)
+            if (!File.Exists(infoInput.text))
             {
-                print("DB ø‰√ª √Îº“");
+                print("ÌååÏùºÏù¥ Ï°¥Ïû¨ÌïòÏßÄ ÏïäÏäµÎãàÎã§.");
+                return;
             }
-            else if (task.IsFaulted)
-            {
-                print("DB ø‰√ª Ω«∆–");
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
 
-                foreach (DataSnapshot item in snapshot.Children)
+            using (FileStream fs = new FileStream(jsonPathInput.text, FileMode.Open))
+            {
+                string fileName = Path.GetFileNameWithoutExtension(jsonPathInput.text);
+
+                using (StreamReader sr = new StreamReader(fs))
                 {
-                    string json = item.GetRawJsonValue();
-                    print("DB ¿¿¥‰ µ•¿Ã≈Õ: " + json);
+                    string json = sr.ReadToEnd();
+
+                    DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("student");
+                
+                    if (dbRef == null)
+                        print("Ïò¨Î∞îÎ•∏ DatabaseReferenceÎ•º ÏûÖÎ†•Ìï¥ Ï£ºÏÑ∏Ïöî.");
+
+                    dbRef.Child(fileName).SetRawJsonValueAsync(json);
                 }
-
-                print("DB ø‰√ª øœ∑·");
-
-                isReceived = true;
             }
         }
-    }
 
-    void SendJsonFile(string filePath, string refName)
-    {
-        using (FileStream fs = new FileStream(filePath, FileMode.Open))
+        void RequestData()
         {
-            using (StreamReader sr = new StreamReader(fs))
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+
+            dbRef.GetValueAsync().ContinueWith(LoadFunc); // Îç∞Ïù¥ÌÑ∞ ÏöîÏ≤≠ ÌõÑ, ÏùëÎãµÏùÑ Î∞õÏúºÎ©¥ LoadFuncÎ•º Ïã§Ìñâ
+
+            void LoadFunc(Task<DataSnapshot> task)
             {
-                string json = sr.ReadToEnd();
+                if (task.IsCanceled)
+                {
+                    print("DB ÏöîÏ≤≠ Ï∑®ÏÜå");
+                }
+                else if (task.IsFaulted)
+                {
+                    print("DB ÏöîÏ≤≠ Ïã§Ìå®");
+                }
+                else if (task.IsCompleted)
+                {
+                    DataSnapshot snapshot = task.Result;
 
-                DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+                    foreach (DataSnapshot item in snapshot.Children)
+                    {
+                        string json = item.GetRawJsonValue();
+                        print("DB ÏùëÎãµ Îç∞Ïù¥ÌÑ∞: " + json);
+                    }
 
-                dbRef.Child(refName).Child(refName).Child(refName).SetRawJsonValueAsync(json);
+                    print("DB ÏöîÏ≤≠ ÏôÑÎ£å");
+
+                    isReceived = true;
+                }
             }
         }
-    }
 
-    /// <summary>
-    /// ¡˜∑ƒ»≠(Serialization) øπ¡¶: Book class -> JSON
-    /// </summary>
-    void SendObjectToChild(string childName)
-    {
-        Book book = new Book();
-        book.name = "ªÁ««ø£Ω∫";
-        book.bookNumber = "1";
-
-        Book book2 = new Book();
-        book2.name = "«ª√≥ºø«¡";
-        book2.bookNumber = "2";
-
-        string jsonBook = JsonUtility.ToJson(book);
-        string jsonBook2 = JsonUtility.ToJson(book2);
-
-        print(jsonBook);
-        print(jsonBook2);
-
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-        dbRef.Child(childName).Child("ªÁ««ø£Ω∫").SetRawJsonValueAsync(jsonBook);
-        dbRef.Child(childName).Child("«ª√≥ºø«¡").SetRawJsonValueAsync(jsonBook2);
-    }
-
-    /// <summary>
-    /// ø™¡˜∑ƒ»≠(Deserialization) øπ¡¶: JSON -> Object
-    /// </summary>
-    void RequestJsonToObject()
-    {
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-
-        µµº≠∞¸ = new List<Book>();
-
-        dbRef.Child("Library").GetValueAsync().ContinueWith(task =>
+        void SendJsonFile(string filePath, string refName)
         {
-            if(task.IsCompleted)
+            using (FileStream fs = new FileStream(filePath, FileMode.Open))
             {
-                DataSnapshot snapshot = task.Result;
-                foreach(var item in snapshot.Children)
+                using (StreamReader sr = new StreamReader(fs))
                 {
-                    // JSON -> Object
-                    string json = item.GetRawJsonValue();
+                    string json = sr.ReadToEnd();
 
-                    Book book = JsonUtility.FromJson<Book>(json);
+                    DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
 
-                    µµº≠∞¸.Add(book);
+                    dbRef.Child(refName).Child(refName).Child(refName).SetRawJsonValueAsync(json);
                 }
             }
-        });
-    }
+        }
 
-    /// Object(Library)∏¶ ¡§∫∏(Json)∑Œ ¡˜∑ƒ»≠ »ƒ Firebase DB∑Œ ¿¸º€
-    void SendObjectByNewtonJson()
-    {
-        Library æÓ∏∞¿Ãµµº≠∞¸ = new Library();
-
-        Book book = new Book();
-        book.name = "ªÔ±π¡ˆ";
-        book.bookNumber = "1";
-
-        Book book1 = new Book();
-        book1.name = "∏∞ƒ°«…";
-        book1.bookNumber = "2";
-
-        æÓ∏∞¿Ãµµº≠∞¸.library.Add("ªÔ±π¡ˆ", book);
-        æÓ∏∞¿Ãµµº≠∞¸.library.Add("∏∞ƒ°«…", book1);
-
-        Library ±π»∏µµº≠∞¸ = new Library();
-
-        Book book2 = new Book();
-        book2.name = "«Âπ˝∞≥¡§æ»";
-        book2.bookNumber = "3";
-
-        Book book3 = new Book();
-        book3.name = "πŒ¡÷¡÷¿«";
-        book3.bookNumber = "4";
-
-        ±π»∏µµº≠∞¸.library.Add("«Âπ˝∞≥¡§æ»", book2);
-        ±π»∏µµº≠∞¸.library.Add("πŒ¡÷¡÷¿«", book3);
-
-        // Nested class¥¬ JsonUtility∑Œ ¡˜∑ƒ»≠ «“ ºˆ æ¯¿Ω. -> Json.Net ªÁøÎ « ø‰
-        //string json1 = JsonUtility.ToJson(æÓ∏∞¿Ãµµº≠∞¸); 
-        //string json2 = JsonUtility.ToJson(±π»∏µµº≠∞¸);
-
-        // Json.Net
-        string json1 = JsonConvert.SerializeObject(æÓ∏∞¿Ãµµº≠∞¸);
-        string json2 = JsonConvert.SerializeObject(±π»∏µµº≠∞¸);
-
-        print(json1);
-        print(json2);
-
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-        dbRef.Child("µµº≠∞¸∏ÆΩ∫∆Æ").Child("æÓ∏∞¿Ãµµº≠∞¸").SetRawJsonValueAsync(json1);
-        dbRef.Child("µµº≠∞¸∏ÆΩ∫∆Æ").Child("±π»∏µµº≠∞¸").SetRawJsonValueAsync(json2);
-    }
-
-    /// <summary>
-    /// Firebase DB¿« ¡§∫∏∏¶(Json)∏¶ Object(Library)∑Œ ø™¡˜∑ƒ»≠
-    /// </summary>
-    void RequesObjectByNewtonJson()
-    {
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-        dbRef.Child("µµº≠∞¸∏ÆΩ∫∆Æ").Child("±π»∏µµº≠∞¸").GetValueAsync().ContinueWith(task =>
+        /// <summary>
+        /// ÏßÅÎ†¨Ìôî(Serialization) ÏòàÏ†ú: Book class -> JSON
+        /// </summary>
+        void SendObjectToChild(string childName)
         {
-            if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                foreach(var library in snapshot.Children)
-                {
-                    string json;
-                    Library lib = new Library();
+            Book book = new Book();
+            book.name = "ÏÇ¨ÌîºÏóîÏä§";
+            book.bookNumber = "1";
 
-                    foreach (var item in library.Children)
+            Book book2 = new Book();
+            book2.name = "Ìì®Ï≤òÏÖÄÌîÑ";
+            book2.bookNumber = "2";
+
+            string jsonBook = JsonUtility.ToJson(book);
+            string jsonBook2 = JsonUtility.ToJson(book2);
+
+            print(jsonBook);
+            print(jsonBook2);
+
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+            dbRef.Child(childName).Child("ÏÇ¨ÌîºÏóîÏä§").SetRawJsonValueAsync(jsonBook);
+            dbRef.Child(childName).Child("Ìì®Ï≤òÏÖÄÌîÑ").SetRawJsonValueAsync(jsonBook2);
+        }
+
+        /// <summary>
+        /// Ïó≠ÏßÅÎ†¨Ìôî(Deserialization) ÏòàÏ†ú: JSON -> Object
+        /// </summary>
+        void RequestJsonToObject()
+        {
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+
+            ÎèÑÏÑúÍ¥Ä = new List<Book>();
+
+            dbRef.Child("Library").GetValueAsync().ContinueWith(task =>
+            {
+                if(task.IsCompleted)
+                {
+                    DataSnapshot snapshot = task.Result;
+                    foreach(var item in snapshot.Children)
                     {
-                        json = item.GetRawJsonValue();
-                        print(json);
-                        Book book = JsonConvert.DeserializeObject<Book>(json);
-                        lib.library.Add(item.Key, book);
-                        //print($"{item.Key}, {item.Value}");
-                        µµº≠∞¸.Add(book);
+                        // JSON -> Object
+                        string json = item.GetRawJsonValue();
+
+                        Book book = JsonUtility.FromJson<Book>(json);
+
+                        ÎèÑÏÑúÍ¥Ä.Add(book);
                     }
-
-                    // Jaon -> Object
-                    µµº≠∞¸µÈ.Add(lib);
                 }
-            }
-        });
+            });
+        }
 
-        dbRef.Child("µµº≠∞¸∏ÆΩ∫∆Æ").Child("æÓ∏∞¿Ãµµº≠∞¸").GetValueAsync().ContinueWith(task =>
+        /// Object(Library)Î•º Ï†ïÎ≥¥(Json)Î°ú ÏßÅÎ†¨Ìôî ÌõÑ Firebase DBÎ°ú Ï†ÑÏÜ°
+        void SendObjectByNewtonJson()
         {
-            if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                foreach (var library in snapshot.Children)
-                {
-                    string json;
-                    Library lib = new Library();
+            Library Ïñ¥Î¶∞Ïù¥ÎèÑÏÑúÍ¥Ä = new Library();
 
-                    foreach (var item in library.Children)
+            Book book = new Book();
+            book.name = "ÏÇºÍµ≠ÏßÄ";
+            book.bookNumber = "1";
+
+            Book book1 = new Book();
+            book1.name = "Î¶∞ÏπòÌïÄ";
+            book1.bookNumber = "2";
+
+            Ïñ¥Î¶∞Ïù¥ÎèÑÏÑúÍ¥Ä.library.Add("ÏÇºÍµ≠ÏßÄ", book);
+            Ïñ¥Î¶∞Ïù¥ÎèÑÏÑúÍ¥Ä.library.Add("Î¶∞ÏπòÌïÄ", book1);
+
+            Library Íµ≠ÌöåÎèÑÏÑúÍ¥Ä = new Library();
+
+            Book book2 = new Book();
+            book2.name = "ÌóåÎ≤ïÍ∞úÏ†ïÏïà";
+            book2.bookNumber = "3";
+
+            Book book3 = new Book();
+            book3.name = "ÎØºÏ£ºÏ£ºÏùò";
+            book3.bookNumber = "4";
+
+            Íµ≠ÌöåÎèÑÏÑúÍ¥Ä.library.Add("ÌóåÎ≤ïÍ∞úÏ†ïÏïà", book2);
+            Íµ≠ÌöåÎèÑÏÑúÍ¥Ä.library.Add("ÎØºÏ£ºÏ£ºÏùò", book3);
+
+            // Nested classÎäî JsonUtilityÎ°ú ÏßÅÎ†¨Ìôî Ìï† Ïàò ÏóÜÏùå. -> Json.Net ÏÇ¨Ïö© ÌïÑÏöî
+            //string json1 = JsonUtility.ToJson(Ïñ¥Î¶∞Ïù¥ÎèÑÏÑúÍ¥Ä); 
+            //string json2 = JsonUtility.ToJson(Íµ≠ÌöåÎèÑÏÑúÍ¥Ä);
+
+            // Json.Net
+            string json1 = JsonConvert.SerializeObject(Ïñ¥Î¶∞Ïù¥ÎèÑÏÑúÍ¥Ä);
+            string json2 = JsonConvert.SerializeObject(Íµ≠ÌöåÎèÑÏÑúÍ¥Ä);
+
+            print(json1);
+            print(json2);
+
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+            dbRef.Child("ÎèÑÏÑúÍ¥ÄÎ¶¨Ïä§Ìä∏").Child("Ïñ¥Î¶∞Ïù¥ÎèÑÏÑúÍ¥Ä").SetRawJsonValueAsync(json1);
+            dbRef.Child("ÎèÑÏÑúÍ¥ÄÎ¶¨Ïä§Ìä∏").Child("Íµ≠ÌöåÎèÑÏÑúÍ¥Ä").SetRawJsonValueAsync(json2);
+        }
+
+        /// <summary>
+        /// Firebase DBÏùò Ï†ïÎ≥¥Î•º(Json)Î•º Object(Library)Î°ú Ïó≠ÏßÅÎ†¨Ìôî
+        /// </summary>
+        void RequesObjectByNewtonJson()
+        {
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+            dbRef.Child("ÎèÑÏÑúÍ¥ÄÎ¶¨Ïä§Ìä∏").Child("Íµ≠ÌöåÎèÑÏÑúÍ¥Ä").GetValueAsync().ContinueWith(task =>
+            {
+                if (task.IsCompleted)
+                {
+                    DataSnapshot snapshot = task.Result;
+                    foreach(var library in snapshot.Children)
                     {
-                        json = item.GetRawJsonValue();
-                        print(json);
-                        Book book = JsonConvert.DeserializeObject<Book>(json);
-                        lib.library.Add(item.Key, book);
+                        string json;
+                        Library lib = new Library();
 
-                        //print($"{item.Key}, {item.Value}");
-                        µµº≠∞¸.Add(book);
+                        foreach (var item in library.Children)
+                        {
+                            json = item.GetRawJsonValue();
+                            print(json);
+                            Book book = JsonConvert.DeserializeObject<Book>(json);
+                            lib.library.Add(item.Key, book);
+                            //print($"{item.Key}, {item.Value}");
+                            ÎèÑÏÑúÍ¥Ä.Add(book);
+                        }
+
+                        // Jaon -> Object
+                        ÎèÑÏÑúÍ¥ÄÎì§.Add(lib);
                     }
-
-                    // Jaon -> Object
-                    µµº≠∞¸µÈ.Add(lib);
                 }
-            }
-        });
-    }
+            });
 
-    void RequestJsonToDictionary(string refName)
-    {
-        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference(refName);
-
-        dbRef.GetValueAsync().ContinueWith(task =>
-        {
-            if(task.IsCanceled)
+            dbRef.Child("ÎèÑÏÑúÍ¥ÄÎ¶¨Ïä§Ìä∏").Child("Ïñ¥Î¶∞Ïù¥ÎèÑÏÑúÍ¥Ä").GetValueAsync().ContinueWith(task =>
             {
-                print("task √Îº“µ ");
-            }
-            else if(task.IsFaulted)
-            {
-                print("task Ω«∆–«‘");
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-
-                foreach(DataSnapshot item in snapshot.Children)
+                if (task.IsCompleted)
                 {
-                    print(item.Key);
-                    IDictionary value = (IDictionary)item.Value;
-                    string info = $"√• π¯»£: {value["bookNumber"]}, √• ¿Ã∏ß: {value["name"]}";
-                    print(info);
+                    DataSnapshot snapshot = task.Result;
+                    foreach (var library in snapshot.Children)
+                    {
+                        string json;
+                        Library lib = new Library();
+
+                        foreach (var item in library.Children)
+                        {
+                            json = item.GetRawJsonValue();
+                            print(json);
+                            Book book = JsonConvert.DeserializeObject<Book>(json);
+                            lib.library.Add(item.Key, book);
+
+                            //print($"{item.Key}, {item.Value}");
+                            ÎèÑÏÑúÍ¥Ä.Add(book);
+                        }
+
+                        // Jaon -> Object
+                        ÎèÑÏÑúÍ¥ÄÎì§.Add(lib);
+                    }
                 }
-            }
-        });
+            });
+        }
+
+        void RequestJsonToDictionary(string refName)
+        {
+            DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference(refName);
+
+            dbRef.GetValueAsync().ContinueWith(task =>
+            {
+                if(task.IsCanceled)
+                {
+                    print("task Ï∑®ÏÜåÎê®");
+                }
+                else if(task.IsFaulted)
+                {
+                    print("task Ïã§Ìå®Ìï®");
+                }
+                else if (task.IsCompleted)
+                {
+                    DataSnapshot snapshot = task.Result;
+
+                    foreach(DataSnapshot item in snapshot.Children)
+                    {
+                        print(item.Key);
+                        IDictionary value = (IDictionary)item.Value;
+                        string info = $"Ï±Ö Î≤àÌò∏: {value["bookNumber"]}, Ï±Ö Ïù¥Î¶Ñ: {value["name"]}";
+                        print(info);
+                    }
+                }
+            });
         
+        }
     }
 }

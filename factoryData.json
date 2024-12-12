@@ -1,0 +1,131 @@
+{
+  "timeStamp": "DateTime",
+  "설비id": "string",
+  "설비작동여부": true,
+  "Product_line": [
+    {
+    "id":"공급",
+    "isRunning":false,
+    "duration":0.0,
+    "lsForward":false,
+    "lsBackward":false,
+    "cycleCnt":0,
+    "cycleTime":0.0,
+    "lastMaintenanceTime":"",
+    "nextMaintenanceTime":""
+    },
+    {
+    "id":"가공",
+    "isRunning":false,
+    "duration":0.0,
+    "lsForward":false,
+    "lsBackward":false,
+    "cycleCnt":0,
+    "cycleTime":0.0,
+    "lastMaintenanceTime":"",
+    "nextMaintenanceTime":""
+    },
+    {
+    "id":"송출",
+    "isRunning":false,
+    "duration":0.0,
+    "lsForward":false,
+    "lsBackward":false,
+    "cycleCnt":0,
+    "cycleTime":0.0,
+    "lastMaintenanceTime":"",
+    "nextMaintenanceTime":""
+    },
+    {
+    "id":"배출",
+    "isRunning":false,
+    "duration":0.0,
+    "lsForward":false,
+    "lsBackward":false,
+    "cycleCnt":0,
+    "cycleTime":0.0,
+    "lastMaintenanceTime":"",
+    "nextMaintenanceTime":""
+    },
+    {
+    "id":"컨베이어",
+    "isRunning":false,
+    "duration":0.0,
+    "lsForward":false,
+    "lsBackward":false,
+    "cycleCnt":0,
+    "cycleTime":0.0,
+    "lastMaintenanceTime":"",
+    "nextMaintenanceTime":""
+    },,
+    {
+    "id":"공급센서",
+    "isRunning":false,
+    "duration":0.0,
+    "lsForward":false,
+    "lsBackward":false,
+    "cycleCnt":0,
+    "cycleTime":0.0,
+    "lastMaintenanceTime":"",
+    "nextMaintenanceTime":""
+    },
+    {
+    "id":"물체확인센서",
+    "isRunning":false,
+    "duration":0.0,
+    "lsForward":false,
+    "lsBackward":false,
+    "cycleCnt":0,
+    "cycleTime":0.0,
+    "lastMaintenanceTime":"",
+    "nextMaintenanceTime":""
+    },
+    {
+    "id":"금속확인센서",
+    "isRunning":false,
+    "duration":0.0,
+    "lsForward":false,
+    "lsBackward":false,
+    "cycleCnt":0,
+    "cycleTime":0.0,
+    "lastMaintenanceTime":"",
+    "nextMaintenanceTime":""
+    }
+  ],
+  "PalletizingLine": [
+    {
+      "id": "RobotA",
+      "isRunning": false,
+      "stepCnt": 0,
+      "cycleCnt": 0,
+      "cycleTime": 0.0,
+      "lastMaintenanceTime": "DateTime",
+      "nextMaintenanceTime": "DateTime"
+    },
+    {
+      "id": "RobotB",
+      "isRunning": false,
+      "stepCnt": 0,
+      "cycleCnt": 0,
+      "cycleTime": 0.0,
+      "lastMaintenanceTime": "DateTime",
+      "nextMaintenanceTime": "DateTime"
+    }
+  ],
+  "Inventory": {
+    "expectedProducts": 0,
+    "finishedProducts": 0,
+    "failedProducts": 0,
+    "rawMaterial": 0.0
+  },
+  "EnergyConsumption": {
+    "mps": 0.0,
+    "robots": 0.0,
+    "total": 0.0
+  },
+  "EnvironmentData": {
+    "temperture": 0.0,
+    "humidity": 0.0,
+    "airQuality": 0.0
+  }
+}

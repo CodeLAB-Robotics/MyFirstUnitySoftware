@@ -1,0 +1,14 @@
+{
+  "code" : "0003",
+  "grade" : {
+    "English" : 90,
+    "Korean" : 100,
+    "Math" : 50,
+    "Science" : 70
+  },
+  "info" : {
+    "age" : 11,
+    "gender" : "male",
+    "name" : "Ojui_2"
+  }
+}

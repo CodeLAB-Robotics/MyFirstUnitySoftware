@@ -21,6 +21,10 @@ namespace MPS
         public bool isRodMoving = false;
         public bool isForwardLSOn = false;
         public bool isBackwardLSOn = false;
+        public int cycleCnt;
+        public float cycleTime;
+        public string lastMaintenanceTime; // 2024-12-12
+        public string nextMaintenanceTime; // 2025-12-12
         MeshRenderer forwardMR;
         MeshRenderer backwardMR;
         Color lsOffColor; // red
@@ -41,6 +45,8 @@ namespace MPS
         public void OnForwardBtnClkEvent()
         {
             if (isForward || isRodMoving) return;
+
+            cycleCnt++;
 
             StartCoroutine(MoveCylinder(cylinderRod, minRange, maxRange, duration));
         }
@@ -66,6 +72,8 @@ namespace MPS
                 currentTime += Time.deltaTime;
 
                 rod.localPosition = Vector3.Lerp(minPos, maxPos, currentTime / duration);
+
+                cycleTime += Time.deltaTime;
 
                 yield return new WaitForEndOfFrame();
             }

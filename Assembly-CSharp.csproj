@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\Calculator\Calculator.cs" />
     <Compile Include="Assets\Scripts\Interior\ShepherdMove.cs" />
     <Compile Include="Assets\Scripts\FirebaseDB\FirebaseDBManager.cs" />
+    <Compile Include="Assets\Scripts\MPS\FirebaseDBManager.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\MPS\TCPClient.cs" />
     <Compile Include="Assets\Bublisher\3D Stylized Animated Dogs Kit\Scripts\AnimationButton.cs" />
