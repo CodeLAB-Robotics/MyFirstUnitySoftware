@@ -161,12 +161,12 @@ namespace MPS
 
             if (dbRef != null)
             {
-                //StartCoroutine(CoUploadData());
+                StartCoroutine(CoUploadData());
             }
 
             //InvokeRepeating("InitializeData", 0, 3);
             //InitializeData();
-            UploadData();
+            //UploadData();
         }
 
         void InitializeData()
@@ -246,7 +246,7 @@ namespace MPS
 
             sb.Append($"{{\"timeStamp\":\"{mPSManager.timeStamp.ToString()}\",");
             sb.Append($"\"id\":\"{mPSManager.id}\",");
-            sb.Append($"\"isRunning\":{mPSManager.isRunning},");
+            sb.Append($"\"isRunning\":{(mPSManager.isRunning == true ? "true" : "false")},");
             sb.Append($"\"ProductLines\":[{JsonConvert.SerializeObject(mPSManager.productLines[0])}," +
                 $"{JsonConvert.SerializeObject(mPSManager.productLines[1])}," +
                 $"{JsonConvert.SerializeObject(mPSManager.productLines[2])}," +
@@ -262,6 +262,7 @@ namespace MPS
 
             string json = sb.ToString();
             print(json);
+
             dbRef.SetRawJsonValueAsync(json);
         }
     }

@@ -57,7 +57,7 @@
     "cycleTime":0.0,
     "lastMaintenanceTime":"",
     "nextMaintenanceTime":""
-    },,
+    },
     {
     "id":"공급센서",
     "isRunning":false,
