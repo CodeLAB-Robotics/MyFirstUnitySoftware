@@ -91,6 +91,7 @@ namespace MPS
 
         [Space(20)]
         [Header("DB Data")]
+        // 본 데이터
         public DateTime timeStamp;
         public string id = "Smart Factory 1";
         public bool isRunning;
@@ -100,6 +101,7 @@ namespace MPS
         public EnergyConsumption energyConsumption = new EnergyConsumption();
         public EnvironmentData environmentData = new EnvironmentData();
         
+        // 임시 데이터
         public ProductLine 컨베이어Data = new ProductLine("컨베이어");
         public ProductLine 공급센서Data = new ProductLine("공급센서");
         public ProductLine 물체확인센서Data = new ProductLine("물체확인센서");
@@ -316,38 +318,42 @@ namespace MPS
 
                 MxComponent.Instance.xDevices = xDeviceValue;
 
-                isRunning = startBtnState == 1 ? true : false;
+                isRunning = (startBtnState == 1) ? true : false;
 
-                공급센서Data.isRunning = sensors[0].isEnabled;
+                공급센서Data.isRunning     = sensors[0].isEnabled;
                 물체확인센서Data.isRunning = sensors[1].isEnabled;
                 금속확인센서Data.isRunning = sensors[2].isEnabled;
 
-                공급실린더Data.isRunning = cylinders[0].isRodMoving;
-                공급실린더Data.lsForward = cylinders[0].isForwardLSOn;
+                공급실린더Data.isRunning  = cylinders[0].isRodMoving;
+                공급실린더Data.lsForward  = cylinders[0].isForwardLSOn;
                 공급실린더Data.lsBackward = cylinders[0].isBackwardLSOn;
-                공급실린더Data.cycleCnt = cylinders[0].cycleCnt;
-                공급실린더Data.cycleTime = cylinders[0].cycleTime;
+                공급실린더Data.cycleCnt   = cylinders[0].cycleCnt;
+                공급실린더Data.cycleTime  = cylinders[0].cycleTime;
 
-                가공실린더Data.isRunning = cylinders[1].isRodMoving;
-                가공실린더Data.lsForward = cylinders[1].isForwardLSOn;
+                가공실린더Data.isRunning  = cylinders[1].isRodMoving;
+                가공실린더Data.lsForward  = cylinders[1].isForwardLSOn;
                 가공실린더Data.lsBackward = cylinders[1].isBackwardLSOn;
-                가공실린더Data.cycleCnt = cylinders[1].cycleCnt;
-                가공실린더Data.cycleTime = cylinders[1].cycleTime;
+                가공실린더Data.cycleCnt   = cylinders[1].cycleCnt;
+                가공실린더Data.cycleTime  = cylinders[1].cycleTime;
 
-                송출실린더Data.isRunning = cylinders[2].isRodMoving;
-                송출실린더Data.lsForward = cylinders[2].isForwardLSOn;
+                송출실린더Data.isRunning  = cylinders[2].isRodMoving;
+                송출실린더Data.lsForward  = cylinders[2].isForwardLSOn;
                 송출실린더Data.lsBackward = cylinders[2].isBackwardLSOn;
-                송출실린더Data.cycleCnt = cylinders[2].cycleCnt;
-                송출실린더Data.cycleTime = cylinders[2].cycleTime;
+                송출실린더Data.cycleCnt   = cylinders[2].cycleCnt;
+                송출실린더Data.cycleTime  = cylinders[2].cycleTime;
 
-                배출실린더Data.isRunning = cylinders[3].isRodMoving;
-                배출실린더Data.lsForward = cylinders[3].isForwardLSOn;
+                배출실린더Data.isRunning  = cylinders[3].isRodMoving;
+                배출실린더Data.lsForward  = cylinders[3].isForwardLSOn;
                 배출실린더Data.lsBackward = cylinders[3].isBackwardLSOn;
-                배출실린더Data.cycleCnt = cylinders[3].cycleCnt;
-                배출실린더Data.cycleTime = cylinders[3].cycleTime;
+                배출실린더Data.cycleCnt   = cylinders[3].cycleCnt;
+                배출실린더Data.cycleTime  = cylinders[3].cycleTime;
 
                 로봇AData.isRunning = robotController[0].isRunning;
+                로봇AData.cycleCnt  = robotController[0].cycleCnt;
+                로봇AData.cycleTime = robotController[0].cycleTime;
                 로봇BData.isRunning = robotController[1].isRunning;
+                로봇BData.cycleCnt  = robotController[0].cycleCnt;
+                로봇BData.cycleTime = robotController[0].cycleTime;
 
 #elif TCPServerVersion
 

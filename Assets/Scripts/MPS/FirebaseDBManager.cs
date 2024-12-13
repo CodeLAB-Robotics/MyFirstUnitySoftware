@@ -18,137 +18,113 @@ namespace MPS
         public string dbURL;
         public MPSManager mPSManager;
         public float updateInterval = 1f;
-        public string dataFormat = @"
-{
-  ""timeStamp"": """",
-  ""id"": """",
-  ""isRunning"": true,
-  ""ProductLines"": [
+        string dataFormat = @"{
+  ""EnergyConsumption"": [
     {
-    ""id"":""공급"",
-    ""isRunning"":false,
-    ""duration"":0.0,
-    ""lsForward"":false,
-    ""lsBackward"":false,
-    ""cycleCnt"":0,
-    ""cycleTime"":0.0,
-    ""lastMaintenanceTime"":"""",
-    ""nextMaintenanceTime"":""""
-    },
+      ""mps"": 0,
+      ""robots"": 0,
+      ""total"": 0
+    }
+  ],
+  ""EnvironmentData"": [
     {
-    ""id"":""가공"",
-    ""isRunning"":false,
-    ""duration"":0.0,
-    ""lsForward"":false,
-    ""lsBackward"":false,
-    ""cycleCnt"":0,
-    ""cycleTime"":0.0,
-    ""lastMaintenanceTime"":"""",
-    ""nextMaintenanceTime"":""""
-    },
+      ""airQulity"": 0,
+      ""humidity"": 0,
+      ""temperture"": 0
+    }
+  ],
+  ""Inventory"": [
     {
-    ""id"":""송출"",
-    ""isRunning"":false,
-    ""duration"":0.0,
-    ""lsForward"":false,
-    ""lsBackward"":false,
-    ""cycleCnt"":0,
-    ""cycleTime"":0.0,
-    ""lastMaintenanceTime"":"""",
-    ""nextMaintenanceTime"":""""
-    },
-    {
-    ""id"":""배출"",
-    ""isRunning"":false,
-    ""duration"":0.0,
-    ""lsForward"":false,
-    ""lsBackward"":false,
-    ""cycleCnt"":0,
-    ""cycleTime"":0.0,
-    ""lastMaintenanceTime"":"""",
-    ""nextMaintenanceTime"":""""
-    },
-    {
-    ""id"":""컨베이어"",
-    ""isRunning"":false,
-    ""duration"":0.0,
-    ""lsForward"":false,
-    ""lsBackward"":false,
-    ""cycleCnt"":0,
-    ""cycleTime"":0.0,
-    ""lastMaintenanceTime"":"""",
-    ""nextMaintenanceTime"":""""
-    },
-    {
-    ""id"":""공급센서"",
-    ""isRunning"":false,
-    ""duration"":0.0,
-    ""lsForward"":false,
-    ""lsBackward"":false,
-    ""cycleCnt"":0,
-    ""cycleTime"":0.0,
-    ""lastMaintenanceTime"":"""",
-    ""nextMaintenanceTime"":""""
-    },
-    {
-    ""id"":""물체확인센서"",
-    ""isRunning"":false,
-    ""duration"":0.0,
-    ""lsForward"":false,
-    ""lsBackward"":false,
-    ""cycleCnt"":0,
-    ""cycleTime"":0.0,
-    ""lastMaintenanceTime"":"""",
-    ""nextMaintenanceTime"":""""
-    },
-    {
-    ""id"":""금속확인센서"",
-    ""isRunning"":false,
-    ""duration"":0.0,
-    ""lsForward"":false,
-    ""lsBackward"":false,
-    ""cycleCnt"":0,
-    ""cycleTime"":0.0,
-    ""lastMaintenanceTime"":"""",
-    ""nextMaintenanceTime"":""""
+      ""expectedProducts"": 0,
+      ""failedProducts"": 0,
+      ""finishedProducts"": 0,
+      ""rawMaterial"": 0
     }
   ],
   ""PalletizingLines"": [
     {
+      ""cycleCnt"": 0,
+      ""cycleTime"": 0,
       ""id"": ""RobotA"",
       ""isRunning"": false,
-      ""stepCnt"": 0,
-      ""cycleCnt"": 0,
-      ""cycleTime"": 0.0,
-      ""lastMaintenanceTime"": """",
-      ""nextMaintenanceTime"": """"
+      ""stepCnt"": 0
     },
     {
+      ""cycleCnt"": 0,
+      ""cycleTime"": 0,
       ""id"": ""RobotB"",
       ""isRunning"": false,
-      ""stepCnt"": 0,
-      ""cycleCnt"": 0,
-      ""cycleTime"": 0.0,
-      ""lastMaintenanceTime"": """",
-      ""nextMaintenanceTime"": """"
+      ""stepCnt"": 0
     }
   ],
-  ""Inventory"": {
-    ""expectedProducts"": 0,
-    ""finishedProducts"": 0,
-    ""failedProducts"": 0,
-    ""rawMaterial"": 0.0
-  },
-  ""EnergyConsumption"": {
-    ""mps"": 0.0,
-    ""robots"": 0.0,
-    ""total"": 0.0
-  },
-  ""EnvironmentData"": {
-    ""temperture"": 0.0,
-    ""humidity"": 0.0,
-    ""airQuality"": 0.0
-  }
+  ""ProductLines"": [
+    {
+      ""cycleCnt"": 0,
+      ""cycleTime"": 0,
+      ""duration"": 0,
+      ""id"": ""공급실린더"",
+      ""isRunning"": false,
+      ""lsBackward"": false,
+      ""lsForward"": false
+    },
+    {
+      ""cycleCnt"": 0,
+      ""cycleTime"": 0,
+      ""duration"": 0,
+      ""id"": ""가공실린더"",
+      ""isRunning"": false,
+      ""lsBackward"": false,
+      ""lsForward"": false
+    },
+    {
+      ""cycleCnt"": 0,
+      ""cycleTime"": 0,
+      ""duration"": 0,
+      ""id"": ""송출실린더"",
+      ""isRunning"": false,
+      ""lsBackward"": false,
+      ""lsForward"": false
+    },
+    {
+      ""cycleCnt"": 0,
+      ""cycleTime"": 0,
+      ""duration"": 0,
+      ""id"": ""배출실린더"",
+      ""isRunning"": false,
+      ""lsBackward"": false,
+      ""lsForward"": false
+    },
+    {
+      ""cycleCnt"": 0,
+      ""cycleTime"": 0,
+      ""duration"": 0,
+      ""id"": ""컨베이어"",
+      ""isRunning"": false,
+      ""lsBackward"": false,
+      ""lsForward"": false
+    },
+    {
+      ""cycleCnt"": 0,
+      ""cycleTime"": 0,
+      ""duration"": 0,
+      ""id"": ""공급센서"",
+      ""isRunning"": false,
+      ""lsBackward"": false,
+      ""lsForward"": false
+    },
+    {
+      ""cycleCnt"": 0,
+      ""cycleTime"": 0,
+      ""duration"": 0,
+      ""id"": ""물체확인센서"",
+      ""isRunning"": false,
+      ""lsBackward"": false,
+      ""lsForward"": false
+    }
+  ],
+  ""id"": ""Smart Factory 1"",
+  ""isRunning"": false,
+  ""timeStamp"": ""2024-12-13 오전 10:26:54""
 }";
         DatabaseReference dbRef;
         StringBuilder sb = new StringBuilder();
@@ -166,7 +142,7 @@ namespace MPS
 
             //InvokeRepeating("InitializeData", 0, 3);
             //InitializeData();
-            //UploadData();
+            UploadData();
         }
 
         void InitializeData()
@@ -244,21 +220,23 @@ namespace MPS
 
             sb.Clear();
 
-            sb.Append($"{{\"timeStamp\":\"{mPSManager.timeStamp.ToString()}\",");
+            sb.Append("{{");
+            sb.Append($"\"timeStamp\":\"{mPSManager.timeStamp.ToString()}\",");
             sb.Append($"\"id\":\"{mPSManager.id}\",");
-            sb.Append($"\"isRunning\":{(mPSManager.isRunning == true ? "true" : "false")},");
+            sb.Append($"\"isRunning\":{(mPSManager.isRunning == true ? "true" : "false")},"); // Json 형식에는 bool 형식: 소문자(O) 대문자(X) 
             sb.Append($"\"ProductLines\":[{JsonConvert.SerializeObject(mPSManager.productLines[0])}," +
-                $"{JsonConvert.SerializeObject(mPSManager.productLines[1])}," +
-                $"{JsonConvert.SerializeObject(mPSManager.productLines[2])}," +
-                $"{JsonConvert.SerializeObject(mPSManager.productLines[3])}," +
-                $"{JsonConvert.SerializeObject(mPSManager.productLines[4])}," +
-                $"{JsonConvert.SerializeObject(mPSManager.productLines[5])}," +
-                $"{JsonConvert.SerializeObject(mPSManager.productLines[6])}],");
+                      $"{JsonConvert.SerializeObject(mPSManager.productLines[1])}," +
+                      $"{JsonConvert.SerializeObject(mPSManager.productLines[2])}," +
+                      $"{JsonConvert.SerializeObject(mPSManager.productLines[3])}," +
+                      $"{JsonConvert.SerializeObject(mPSManager.productLines[4])}," +
+                      $"{JsonConvert.SerializeObject(mPSManager.productLines[5])}," +
+                      $"{JsonConvert.SerializeObject(mPSManager.productLines[6])}],");
             sb.Append($"\"PalletizingLines\":[{JsonConvert.SerializeObject(mPSManager.palletizingLines[0])}," +
                       $"{JsonConvert.SerializeObject(mPSManager.palletizingLines[1])}],");
             sb.Append($"\"Inventory\":[{JsonConvert.SerializeObject(mPSManager.inventory)}],");
             sb.Append($"\"EnergyConsumption\":[{JsonConvert.SerializeObject(mPSManager.energyConsumption)}],");
-            sb.Append($"\"EnvironmentData\":[{JsonConvert.SerializeObject(mPSManager.environmentData)}]}}");
+            sb.Append($"\"EnvironmentData\":[{JsonConvert.SerializeObject(mPSManager.environmentData)}]");
+            sb.Append("}}");
 
             string json = sb.ToString();
             print(json);

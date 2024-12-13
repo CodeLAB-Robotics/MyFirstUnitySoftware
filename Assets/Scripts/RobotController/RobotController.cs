@@ -252,6 +252,8 @@ public class RobotController : MonoBehaviour
             }
 
             currentCoroutine = StartCoroutine(Run(newSteps));
+
+            cycleCnt++;
         }
         else
         {
