@@ -220,8 +220,7 @@ namespace MPS
 
             sb.Clear();
 
-            sb.Append("{{");
-            sb.Append($"\"timeStamp\":\"{mPSManager.timeStamp.ToString()}\",");
+            sb.Append($"{{\"timeStamp\":\"{mPSManager.timeStamp.ToString()}\",");
             sb.Append($"\"id\":\"{mPSManager.id}\",");
             sb.Append($"\"isRunning\":{(mPSManager.isRunning == true ? "true" : "false")},"); // Json 형식에는 bool 형식: 소문자(O) 대문자(X) 
             sb.Append($"\"ProductLines\":[{JsonConvert.SerializeObject(mPSManager.productLines[0])}," +
@@ -235,8 +234,7 @@ namespace MPS
                       $"{JsonConvert.SerializeObject(mPSManager.palletizingLines[1])}],");
             sb.Append($"\"Inventory\":[{JsonConvert.SerializeObject(mPSManager.inventory)}],");
             sb.Append($"\"EnergyConsumption\":[{JsonConvert.SerializeObject(mPSManager.energyConsumption)}],");
-            sb.Append($"\"EnvironmentData\":[{JsonConvert.SerializeObject(mPSManager.environmentData)}]");
-            sb.Append("}}");
+            sb.Append($"\"EnvironmentData\":[{JsonConvert.SerializeObject(mPSManager.environmentData)}]}}");
 
             string json = sb.ToString();
             print(json);
