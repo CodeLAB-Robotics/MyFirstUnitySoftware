@@ -148,6 +148,8 @@ namespace MPS
             UpdateXDevices();
             UpdateDDevices();
 
+            UpdateDBData(); // MPS 설비의 정보를 최신화(DB에 들어갈 내용을 업데이트)
+
             void UpdateYDevices()
             {
 #if MxComponentVersion
@@ -214,54 +216,69 @@ namespace MPS
 
                 if (컨베이어CW회전 == 1)
                 {
-                    if (!isConveyorRunning)
-                    {
-                        isConveyorRunning = true;
-                        컨베이어Data.isRunning = isConveyorRunning;
-                        컨베이어Data.lsForward = true;
-                        convyorCycleCnt++;
-                    }
-                    
-                    컨베이어Data.cycleTime += Time.deltaTime;
-
                     foreach (var pusher in pushers)
                     {
                         pusher.Move(true);
                     }
+
+                    UpdateDBDataCW();
+
+                    void UpdateDBDataCW()
+                    {
+                        if (!isConveyorRunning)
+                        {
+                            isConveyorRunning = true;
+                            컨베이어Data.isRunning = isConveyorRunning;
+                            컨베이어Data.lsForward = true;
+                            convyorCycleCnt++;
+                        }
+
+                        컨베이어Data.cycleTime += Time.deltaTime;
+                    }
                 }
                 else if (컨베이어CCW회전 == 1)
                 {
-                    if (!isConveyorRunning)
-                    {
-                        isConveyorRunning = true;
-                        컨베이어Data.isRunning = isConveyorRunning;
-                        컨베이어Data.lsBackward = true;
-                        convyorCycleCnt++;
-                    }
-
-                    컨베이어Data.cycleTime += Time.deltaTime;
-
                     foreach (var pusher in pushers)
                     {
                         pusher.Move(false);
+                    }
+
+                    UpdateDBDataCCW();
+
+                    void UpdateDBDataCCW()
+                    {
+                        if (!isConveyorRunning)
+                        {
+                            isConveyorRunning = true;
+                            컨베이어Data.isRunning = isConveyorRunning;
+                            컨베이어Data.lsBackward = true;
+                            convyorCycleCnt++;
+                        }
+
+                        컨베이어Data.cycleTime += Time.deltaTime;
                     }
                 }
 
                 if (컨베이어STOP == 1)
                 {
-                    if (isConveyorRunning)
-                    {
-                        isConveyorRunning = false;
-                        컨베이어Data.isRunning = isConveyorRunning;
-                        컨베이어Data.lsForward = false;
-                        컨베이어Data.lsBackward = false;
-
-                        convyorCycleCnt++;
-                    }
-
                     foreach (var pusher in pushers)
                     {
                         pusher.Stop();
+                    }
+
+                    UpdateDBDateStop();
+
+                    void UpdateDBDateStop()
+                    {
+                        if (isConveyorRunning)
+                        {
+                            isConveyorRunning = false;
+                            컨베이어Data.isRunning = isConveyorRunning;
+                            컨베이어Data.lsForward = false;
+                            컨베이어Data.lsBackward = false;
+
+                            convyorCycleCnt++;
+                        }
                     }
                 }
 
@@ -283,7 +300,6 @@ namespace MPS
 
                 if (로봇B오리진 == 1) robotController[1].OnOriginBtnClkEvent();
             }
-
             void UpdateXDevices()
             {
 #if MxComponentVersion
@@ -317,44 +333,6 @@ namespace MPS
                 }
 
                 MxComponent.Instance.xDevices = xDeviceValue;
-
-                isRunning = (startBtnState == 1) ? true : false;
-
-                공급센서Data.isRunning     = sensors[0].isEnabled;
-                물체확인센서Data.isRunning = sensors[1].isEnabled;
-                금속확인센서Data.isRunning = sensors[2].isEnabled;
-
-                공급실린더Data.isRunning  = cylinders[0].isRodMoving;
-                공급실린더Data.lsForward  = cylinders[0].isForwardLSOn;
-                공급실린더Data.lsBackward = cylinders[0].isBackwardLSOn;
-                공급실린더Data.cycleCnt   = cylinders[0].cycleCnt;
-                공급실린더Data.cycleTime  = cylinders[0].cycleTime;
-
-                가공실린더Data.isRunning  = cylinders[1].isRodMoving;
-                가공실린더Data.lsForward  = cylinders[1].isForwardLSOn;
-                가공실린더Data.lsBackward = cylinders[1].isBackwardLSOn;
-                가공실린더Data.cycleCnt   = cylinders[1].cycleCnt;
-                가공실린더Data.cycleTime  = cylinders[1].cycleTime;
-
-                송출실린더Data.isRunning  = cylinders[2].isRodMoving;
-                송출실린더Data.lsForward  = cylinders[2].isForwardLSOn;
-                송출실린더Data.lsBackward = cylinders[2].isBackwardLSOn;
-                송출실린더Data.cycleCnt   = cylinders[2].cycleCnt;
-                송출실린더Data.cycleTime  = cylinders[2].cycleTime;
-
-                배출실린더Data.isRunning  = cylinders[3].isRodMoving;
-                배출실린더Data.lsForward  = cylinders[3].isForwardLSOn;
-                배출실린더Data.lsBackward = cylinders[3].isBackwardLSOn;
-                배출실린더Data.cycleCnt   = cylinders[3].cycleCnt;
-                배출실린더Data.cycleTime  = cylinders[3].cycleTime;
-
-                로봇AData.isRunning = robotController[0].isRunning;
-                로봇AData.cycleCnt  = robotController[0].cycleCnt;
-                로봇AData.cycleTime = robotController[0].cycleTime;
-                로봇BData.isRunning = robotController[1].isRunning;
-                로봇BData.cycleCnt  = robotController[1].cycleCnt;
-                로봇BData.cycleTime = robotController[1].cycleTime;
-
 #elif TCPServerVersion
 
                 // PLC의 x device를 업데이트
@@ -418,7 +396,6 @@ namespace MPS
                 로봇BData.isRunning        = robotController[1].isRunning;
 #endif
             }
-
             void UpdateDDevices()
             {
 #if MxComponentVersion
@@ -438,6 +415,45 @@ namespace MPS
                 print(TCPClient.Instance.dDevices);
                 //print(Convert.ToInt32(TCPClient.Instance.dDevices, 2));
 #endif
+            }
+            void UpdateDBData()
+            { 
+                isRunning = (startBtnState == 1) ? true : false;
+
+                공급센서Data.isRunning = sensors[0].isEnabled;
+                물체확인센서Data.isRunning = sensors[1].isEnabled;
+                금속확인센서Data.isRunning = sensors[2].isEnabled;
+
+                공급실린더Data.isRunning = cylinders[0].isRodMoving;
+                공급실린더Data.lsForward = cylinders[0].isForwardLSOn;
+                공급실린더Data.lsBackward = cylinders[0].isBackwardLSOn;
+                공급실린더Data.cycleCnt = cylinders[0].cycleCnt;
+                공급실린더Data.cycleTime = cylinders[0].cycleTime;
+
+                가공실린더Data.isRunning = cylinders[1].isRodMoving;
+                가공실린더Data.lsForward = cylinders[1].isForwardLSOn;
+                가공실린더Data.lsBackward = cylinders[1].isBackwardLSOn;
+                가공실린더Data.cycleCnt = cylinders[1].cycleCnt;
+                가공실린더Data.cycleTime = cylinders[1].cycleTime;
+
+                송출실린더Data.isRunning = cylinders[2].isRodMoving;
+                송출실린더Data.lsForward = cylinders[2].isForwardLSOn;
+                송출실린더Data.lsBackward = cylinders[2].isBackwardLSOn;
+                송출실린더Data.cycleCnt = cylinders[2].cycleCnt;
+                송출실린더Data.cycleTime = cylinders[2].cycleTime;
+
+                배출실린더Data.isRunning = cylinders[3].isRodMoving;
+                배출실린더Data.lsForward = cylinders[3].isForwardLSOn;
+                배출실린더Data.lsBackward = cylinders[3].isBackwardLSOn;
+                배출실린더Data.cycleCnt = cylinders[3].cycleCnt;
+                배출실린더Data.cycleTime = cylinders[3].cycleTime;
+
+                로봇AData.isRunning = robotController[0].isRunning;
+                로봇AData.cycleCnt = robotController[0].cycleCnt;
+                로봇AData.cycleTime = robotController[0].cycleTime;
+                로봇BData.isRunning = robotController[1].isRunning;
+                로봇BData.cycleCnt = robotController[1].cycleCnt;
+                로봇BData.cycleTime = robotController[1].cycleTime;
             }
         }
 
