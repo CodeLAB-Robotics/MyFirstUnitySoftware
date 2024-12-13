@@ -198,26 +198,6 @@ namespace MPS
         {
             dbRef = FirebaseDatabase.DefaultInstance.RootReference;
 
-            //string json = $@"{{
-            //    ""timeStamp"":""{mPSManager.timeStamp.ToString()}"",
-            //    ""id"":""{mPSManager.id}"",
-            //    ""isRunning"":{mPSManager.isRunning},
-            //    ""ProductLines"":[{JsonConvert.SerializeObject(mPSManager.productLines[0])},
-            //                      {JsonConvert.SerializeObject(mPSManager.productLines[1])},
-            //                      {JsonConvert.SerializeObject(mPSManager.productLines[2])},
-            //                      {JsonConvert.SerializeObject(mPSManager.productLines[3])},
-            //                      {JsonConvert.SerializeObject(mPSManager.productLines[4])},
-            //                      {JsonConvert.SerializeObject(mPSManager.productLines[5])},
-            //                      {JsonConvert.SerializeObject(mPSManager.productLines[6])}  
-            //    ],
-            //    ""PalletizingLines"":[{JsonConvert.SerializeObject(mPSManager.palletizingLines[0])},
-            //                         {JsonConvert.SerializeObject(mPSManager.palletizingLines[1])}
-            //    ],
-            //    ""Inventory"":{JsonConvert.SerializeObject(mPSManager.inventory)},
-            //    ""EnergyConsumption"":{JsonConvert.SerializeObject(mPSManager.energyConsumption)},
-            //    ""EnvironmentData"":{JsonConvert.SerializeObject(mPSManager.environmentData)}
-            //}}";
-
             sb.Clear();
 
             sb.Append($"{{\"timeStamp\":\"{mPSManager.timeStamp.ToString()}\",");
@@ -229,7 +209,8 @@ namespace MPS
                       $"{JsonConvert.SerializeObject(mPSManager.productLines[3])}," +
                       $"{JsonConvert.SerializeObject(mPSManager.productLines[4])}," +
                       $"{JsonConvert.SerializeObject(mPSManager.productLines[5])}," +
-                      $"{JsonConvert.SerializeObject(mPSManager.productLines[6])}],");
+                      $"{JsonConvert.SerializeObject(mPSManager.productLines[6])}," +
+                      $"{JsonConvert.SerializeObject(mPSManager.productLines[7])}],");
             sb.Append($"\"PalletizingLines\":[{JsonConvert.SerializeObject(mPSManager.palletizingLines[0])}," +
                       $"{JsonConvert.SerializeObject(mPSManager.palletizingLines[1])}],");
             sb.Append($"\"Inventory\":[{JsonConvert.SerializeObject(mPSManager.inventory)}],");

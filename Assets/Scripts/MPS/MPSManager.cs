@@ -79,8 +79,8 @@ namespace MPS
         [SerializeField] int startBtnState = 0;
         [SerializeField] int stopBtnState = 0;
         [SerializeField] int eStopBtnState = 0;
-        bool isConveyorRunning;
-        int convyorCycleCnt;
+        public bool isConveyorRunning;
+        public int convyorCycleCnt;
         DateTime convyorLastMaintenanceTime;
         DateTime convyorNextMaintenanceTime;
 
@@ -352,8 +352,8 @@ namespace MPS
                 로봇AData.cycleCnt  = robotController[0].cycleCnt;
                 로봇AData.cycleTime = robotController[0].cycleTime;
                 로봇BData.isRunning = robotController[1].isRunning;
-                로봇BData.cycleCnt  = robotController[0].cycleCnt;
-                로봇BData.cycleTime = robotController[0].cycleTime;
+                로봇BData.cycleCnt  = robotController[1].cycleCnt;
+                로봇BData.cycleTime = robotController[1].cycleTime;
 
 #elif TCPServerVersion
 

@@ -13617,6 +13617,8 @@ MonoBehaviour:
   startBtnState: 0
   stopBtnState: 0
   eStopBtnState: 0
+  isConveyorRunning: 0
+  convyorCycleCnt: 0
   objPrefabs:
   - {fileID: 6926525576322460582, guid: e989841deb5e8864e9d3a64204286321, type: 3}
   - {fileID: 5222477298752737843, guid: 5cced309f0eecff46ae31f1d52d284a4, type: 3}
@@ -13763,40 +13765,6 @@ MonoBehaviour:
   dbURL: https://mpsproject-97b4d-default-rtdb.asia-southeast1.firebasedatabase.app/
   mPSManager: {fileID: 846790978}
   updateInterval: 5
-  dataFormat: " {   \"timeStamp\": \"2024-12-12 \uC624\uD6C4 7:02:03\",   \"id\":
-    \"Smart Factory 1\",   \"isRunning\": true,   \"ProductLines\": [     {     \"id\":\"\uACF5\uAE09\",    
-    \"isRunning\":false,     \"duration\":0.0,     \"lsForward\":false,     \"lsBackward\":false,    
-    \"cycleCnt\":0,     \"cycleTime\":0.0,     \"lastMaintenanceTime\":\"\",    
-    \"nextMaintenanceTime\":\"\"     },     {     \"id\":\"\uAC00\uACF5\",     \"isRunning\":false,    
-    \"duration\":0.0,     \"lsForward\":false,     \"lsBackward\":false,     \"cycleCnt\":0,    
-    \"cycleTime\":0.0,     \"lastMaintenanceTime\":\"\",     \"nextMaintenanceTime\":\"\"    
-    },     {     \"id\":\"\uC1A1\uCD9C\",     \"isRunning\":false,     \"duration\":0.0,    
-    \"lsForward\":false,     \"lsBackward\":false,     \"cycleCnt\":0,     \"cycleTime\":0.0,    
-    \"lastMaintenanceTime\":\"\",     \"nextMaintenanceTime\":\"\"     },     {    
-    \"id\":\"\uBC30\uCD9C\",     \"isRunning\":false,     \"duration\":0.0,     \"lsForward\":false,    
-    \"lsBackward\":false,     \"cycleCnt\":0,     \"cycleTime\":0.0,     \"lastMaintenanceTime\":\"\",    
-    \"nextMaintenanceTime\":\"\"     },     {     \"id\":\"\uCEE8\uBCA0\uC774\uC5B4\",    
-    \"isRunning\":false,     \"duration\":0.0,     \"lsForward\":false,     \"lsBackward\":false,    
-    \"cycleCnt\":0,     \"cycleTime\":0.0,     \"lastMaintenanceTime\":\"\",    
-    \"nextMaintenanceTime\":\"\"     },     {     \"id\":\"\uACF5\uAE09\uC13C\uC11C\",    
-    \"isRunning\":false,     \"duration\":0.0,     \"lsForward\":false,     \"lsBackward\":false,    
-    \"cycleCnt\":0,     \"cycleTime\":0.0,     \"lastMaintenanceTime\":\"\",    
-    \"nextMaintenanceTime\":\"\"     },     {     \"id\":\"\uBB3C\uCCB4\uD655\uC778\uC13C\uC11C\",    
-    \"isRunning\":false,     \"duration\":0.0,     \"lsForward\":false,     \"lsBackward\":false,    
-    \"cycleCnt\":0,     \"cycleTime\":0.0,     \"lastMaintenanceTime\":\"\",    
-    \"nextMaintenanceTime\":\"\"     },     {     \"id\":\"\uAE08\uC18D\uD655\uC778\uC13C\uC11C\",    
-    \"isRunning\":false,     \"duration\":0.0,     \"lsForward\":false,     \"lsBackward\":false,    
-    \"cycleCnt\":0,     \"cycleTime\":0.0,     \"lastMaintenanceTime\":\"\",    
-    \"nextMaintenanceTime\":\"\"     }   ],   \"PalletizingLines\": [     {      
-    \"id\": \"RobotA\",       \"isRunning\": false,       \"stepCnt\": 0,       \"cycleCnt\":
-    0,       \"cycleTime\": 0.0,       \"lastMaintenanceTime\": \"\",       \"nextMaintenanceTime\":
-    \"\"     },     {       \"id\": \"RobotB\",       \"isRunning\": false,      
-    \"stepCnt\": 0,       \"cycleCnt\": 0,       \"cycleTime\": 0.0,       \"lastMaintenanceTime\":
-    \"\",       \"nextMaintenanceTime\": \"\"     }   ],   \"Inventory\": [{    
-    \"expectedProducts\": 0,     \"finishedProducts\": 0,     \"failedProducts\":
-    0,     \"rawMaterial\": 0.0   }],   \"EnergyConsumption\": [{     \"mps\": 0.0,    
-    \"robots\": 0.0,     \"total\": 0.0   }],   \"EnvironmentData\": [{     \"temperture\":
-    0.0,     \"humidity\": 0.0,     \"airQuality\": 0.0   }] }"
 --- !u!4 &853329791
 Transform:
   m_ObjectHideFlags: 0
