@@ -1,5 +1,5 @@
 ﻿// Master에서만 사용하는 전처리기
-#define TCPServerVersion // MasterMode(MxComponentVersion or TCPServerVersion) or SlaveMode
+#define SlaveMode // MasterMode(MasterWithTCPServer or MasterWithMxComponent) or SlaveMode
 
 using System;
 using System.Collections;
@@ -153,12 +153,12 @@ namespace MPS
             UpdateXDevices();
             UpdateDDevices();
 
-#if MxComponentVersion || TCPServerVersion
+#if MasterWithMxComponent || MasterWithTCPServer
             UpdateDBData(); // MPS 설비의 정보를 최신화(DB에 들어갈 내용을 업데이트)
 #endif
             void UpdateYDevices()
             {
-#if MxComponentVersion
+#if MasterWithMxComponent
                 if (MxComponent.Instance.state == MxComponent.State.DISCONNECTED)
                     return;
 
@@ -182,7 +182,7 @@ namespace MPS
                 int 로봇A오리진 = MxComponent.Instance.yDevices[15] - '0';       // Y0F
                 int 로봇B싱글사이클 = MxComponent.Instance.yDevices[16] - '0';   // Y10
                 int 로봇B오리진 = MxComponent.Instance.yDevices[17] - '0';       // Y11
-#elif TCPServerVersion
+#elif MasterWithTCPServer
                 if (TCPClient.Instance.isConnected == false)
                     return;
 
@@ -331,7 +331,7 @@ namespace MPS
             }
             void UpdateXDevices()
             {
-#if MxComponentVersion
+#if MasterWithMxComponent
                 if (MxComponent.Instance.state == MxComponent.State.DISCONNECTED)
                     return;
 
@@ -362,7 +362,7 @@ namespace MPS
                 }
 
                 MxComponent.Instance.xDevices = xDeviceValue;
-#elif TCPServerVersion
+#elif MasterWithTCPServer
 
                 // PLC의 x device를 업데이트
                 // 만약 xDevice의 블록 수가 두 번째 블록부터는 0이 16개 들어가야 함.
@@ -427,7 +427,7 @@ namespace MPS
             }
             void UpdateDDevices()
             {
-#if MxComponentVersion
+#if MasterWithMxComponent
                 if (MxComponent.Instance.state == MxComponent.State.DISCONNECTED)
                     return;
 
@@ -435,7 +435,7 @@ namespace MPS
 
                 print(MxComponent.Instance.dDevices);
                 print(Convert.ToInt32(MxComponent.Instance.dDevices, 2));
-#elif TCPServerVersion
+#elif MasterWithTCPServer
                 if (TCPClient.Instance.isConnected == false)
                     return;
 

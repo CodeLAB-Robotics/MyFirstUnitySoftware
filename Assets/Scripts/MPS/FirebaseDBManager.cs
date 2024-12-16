@@ -1,4 +1,4 @@
-﻿#define MasterMode // 빌드시 MasterMode or SlaveMode로 코드를변환
+﻿#define SlaveMode // 빌드시 MasterMode(MasterWithTCPServer or MasterWithMxComponent) or SlaveMode로 코드를변환
 
 using System.Collections;
 using UnityEngine;
@@ -159,7 +159,7 @@ namespace MPS
 
             if (dbRef != null)
             {
-#if MasterMode
+#if MasterWithTCPServer || MasterWithMxComponent
                 StartCoroutine(CoUploadData());
 #elif SlaveMode
                 StartCoroutine(CoCheckMPSRunning());
@@ -240,8 +240,11 @@ namespace MPS
             sb.Append($"\"Inventory\":[{JsonConvert.SerializeObject(mPSManager.inventory)}],");
             sb.Append($"\"EnergyConsumption\":[{JsonConvert.SerializeObject(mPSManager.energyConsumption)}],");
             sb.Append($"\"EnvironmentData\":[{JsonConvert.SerializeObject(mPSManager.environmentData)}],");
+#if MasterWithMxComponent
             sb.Append($"\"yDevices\":\"{MxComponent.Instance.yDevices}\"}}");
-
+#elif MasterWithTCPServer
+            sb.Append($"\"yDevices\":\"{TCPClient.Instance.yDevices}\"}}");
+#endif
             string json = sb.ToString();
             print(json);
 

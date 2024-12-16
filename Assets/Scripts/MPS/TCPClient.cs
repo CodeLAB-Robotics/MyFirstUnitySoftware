@@ -1,3 +1,5 @@
+#define SlaveMode // MasterWithTCPServer or SlaveMode
+
 using System.Net.Sockets;
 using System;
 using UnityEngine;
@@ -41,6 +43,7 @@ public class TCPClient : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+#if MasterWithTCPServer
         try
         {
             // 1. 서버에 연결
@@ -55,7 +58,7 @@ public class TCPClient : MonoBehaviour
             print(ex);
             print("서버를 먼저 작동시켜 주세요.");
         }
-
+#endif
 
         for (int i = 0; i < xDeviceBlockSize; i++)
         {
@@ -290,7 +293,7 @@ public class TCPClient : MonoBehaviour
         
         if (isConnected)
         {
-        Request("Disconnect&Quit");
+            Request("Disconnect&Quit");
             isConnected = false;
         }
     }

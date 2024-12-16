@@ -15289,6 +15289,10 @@ PrefabInstance:
       propertyPath: mPSManager
       value: 
       objectReference: {fileID: 846790978}
+    - target: {fileID: 4632867165326249423, guid: 288fede79b8ccc04a81f83defd60e343, type: 3}
+      propertyPath: updateInterval
+      value: 0.01
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
