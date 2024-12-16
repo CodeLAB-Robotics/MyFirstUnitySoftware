@@ -1,5 +1,6 @@
 ﻿// Master에서만 사용하는 전처리기
-#define MxComponentVersion // MxComponentVersion or TCPServerVersion or SlaveMode
+#define TCPServerVersion // MasterMode(MxComponentVersion or TCPServerVersion) or SlaveMode
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
