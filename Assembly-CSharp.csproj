@@ -92,6 +92,7 @@
     <Compile Include="Assets\Scripts\Cinemachine\CinemachineManager.cs" />
     <Compile Include="Assets\Scripts\Rotation\RotationManager.cs" />
     <Compile Include="Assets\Scripts\Pinball\Handle.cs" />
+    <Compile Include="Assets\Scripts\BulletinBoardEx\BulletinBoardManager.cs" />
     <Compile Include="Assets\Scripts\Interior\LookRotate.cs" />
     <Compile Include="Assets\Bublisher\3D Stylized Animated Dogs Kit\Scripts\DemoController.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />

@@ -15,6 +15,8 @@ using UnityEditor;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 
 // FirebaseDB 예제입니다.
@@ -81,6 +83,8 @@ namespace FirebaseDB
       }
     }";
 
+        public Button btn;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -89,6 +93,8 @@ namespace FirebaseDB
             SetRawJsonValueAsync(studentInfoJson);
 
             QueryJsonFile();
+
+            //string btnName = EventSystem.current.currentSelectedGameObject.name;
 
             //SendObjectByNewtonJson();
 
@@ -218,6 +224,9 @@ namespace FirebaseDB
                                      $"/Math_{gradeData["Math"]}" +
                                      $"/Science_{gradeData["Science"]}\n";
 
+                        infoInput.text = (string)gradeData["Math"];
+                        jsonPathInput.text = (string)gradeData["Korean"];
+
                         DataSnapshot info = data.Child("info");
                         IDictionary infoData = (IDictionary)info.Value;
                         totalInfo += $"info: Age_{infoData["age"]}" +
@@ -258,6 +267,7 @@ namespace FirebaseDB
 
             // code에 해당하는 쿼리 찾기
             query = dbRef.OrderByChild("code").EqualTo(infoInput.text);
+            query = dbRef.OrderByChild("postId").EqualTo("0");
 
             query.ValueChanged += OnDataLoaded;
         }

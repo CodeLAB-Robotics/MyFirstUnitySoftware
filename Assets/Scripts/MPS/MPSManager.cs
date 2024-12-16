@@ -118,6 +118,9 @@ namespace MPS
         Color yellowLamp;
         Color greenLamp;
 
+        public GameObject 게시판main;
+        public GameObject 게시글;
+
         private void Awake()
         {
             redLamp = lamps[0].material.GetColor("_BaseColor");

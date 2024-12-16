@@ -13625,6 +13625,8 @@ MonoBehaviour:
   spawnPos: {fileID: 949689520}
   id: Smart Factory 1
   isRunning: 0
+  "\uAC8C\uC2DC\uD310main": {fileID: 0}
+  "\uAC8C\uC2DC\uAE00": {fileID: 0}
 --- !u!1 &847342072
 GameObject:
   m_ObjectHideFlags: 0
@@ -13765,6 +13767,7 @@ MonoBehaviour:
   dbURL: https://mpsproject-97b4d-default-rtdb.asia-southeast1.firebasedatabase.app/
   mPSManager: {fileID: 846790978}
   updateInterval: 5
+  mPSCheckInterval: 1
 --- !u!4 &853329791
 Transform:
   m_ObjectHideFlags: 0

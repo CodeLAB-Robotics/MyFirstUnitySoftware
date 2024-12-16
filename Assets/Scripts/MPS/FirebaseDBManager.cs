@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#define SlaveMode // 빌드시 MasterMode or SlaveMode로 코드를변환
+
+using System.Collections;
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
@@ -6,6 +8,7 @@ using System;
 using Newtonsoft.Json;
 using System.Text;
 using static MPS.MPSManager;
+using Newtonsoft.Json.Linq;
 
 namespace MPS
 {
@@ -18,6 +21,7 @@ namespace MPS
         public string dbURL;
         public MPSManager mPSManager;
         public float updateInterval = 1f;
+        public float mPSCheckInterval = 1f;
         string dataFormat = @"{
   ""EnergyConsumption"": [
     {
@@ -137,12 +141,17 @@ namespace MPS
 
             if (dbRef != null)
             {
+#if MasterMode
                 StartCoroutine(CoUploadData());
+#elif SlaveMode
+                StartCoroutine(CoCheckMPSRunning());
+
+                DownloadData();
+#endif
             }
 
-            //InvokeRepeating("InitializeData", 0, 3);
             //InitializeData();
-            UploadData();
+            //UploadData();
         }
 
         void InitializeData()
@@ -220,7 +229,97 @@ namespace MPS
             string json = sb.ToString();
             print(json);
 
-            dbRef.SetRawJsonValueAsync(json);
+            dbRef.SetRawJsonValueAsync(json).ContinueWith(task =>
+            {
+                if(task.IsCompleted)
+                {
+                    print("완료");
+                }
+            });
+        }
+
+        IEnumerator CoDownloadData()
+        {
+            yield return new WaitUntil(() => mPSManager.isRunning);
+
+            while (mPSManager.isRunning)
+            {
+                DownloadData();
+
+                yield return new WaitForSeconds(updateInterval);
+            }
+        }
+
+        IEnumerator CoCheckMPSRunning()
+        {
+            while(true)
+            {
+                CheckMPSRunning();
+
+                yield return new WaitForSeconds(mPSCheckInterval);
+            }
+        }
+
+        private void CheckMPSRunning()
+        {
+            if (dbRef != null)
+            {
+                dbRef.GetValueAsync().ContinueWith(task =>
+                {
+                    if (task.IsCanceled)
+                    {
+                        print("데이터 다운로드 취소");
+                    }
+                    else if (task.IsFaulted)
+                    {
+                        print("데이터 다운로드 실패");
+                    }
+                    else if (task.IsCompleted)
+                    {
+                        print("데이터 다운로드 성공!");
+
+                        DataSnapshot snapshot = task.Result;
+
+                        string json = snapshot.GetRawJsonValue();
+
+                        JObject totalData = JObject.Parse(json);
+
+                        mPSManager.isRunning = (bool)totalData["isRunning"];
+
+                        print($"MPS 작동여부: {mPSManager.isRunning}");
+                    }
+                });
+            }
+        }
+
+        private void DownloadData()
+        {
+            if (dbRef != null)
+            {
+                dbRef.GetValueAsync().ContinueWith(task =>
+                {
+                    if (task.IsCanceled)
+                    {
+                        print("데이터 다운로드 취소");
+                    }
+                    else if (task.IsFaulted)
+                    {
+                        print("데이터 다운로드 실패");
+                    }
+                    else if (task.IsCompleted)
+                    {
+                        print("데이터 다운로드 성공!");
+
+                        DataSnapshot snapshot = task.Result;
+
+                        string json = snapshot.GetRawJsonValue();
+
+                        JObject totalData = JObject.Parse(json);
+
+                        mPSManager.isRunning = (bool)totalData["isRunning"];
+                    }
+                });
+            }
         }
     }
 }
