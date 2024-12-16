@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\Sequence\SequenceManager.cs" />
     <Compile Include="Assets\Scripts\Calculator\Calculator.cs" />
     <Compile Include="Assets\Scripts\Interior\ShepherdMove.cs" />
+    <Compile Include="Assets\Phoenix3D\P3DPack\Scripts\OpenURL.cs" />
     <Compile Include="Assets\Scripts\FirebaseDB\FirebaseDBManager.cs" />
     <Compile Include="Assets\Scripts\MPS\FirebaseDBManager.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
@@ -85,19 +86,18 @@
     <Compile Include="Assets\Scripts\Animation\Cyborg.cs" />
     <Compile Include="Assets\Scripts\RobotController\RobotController.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
-    <Compile Include="Assets\Phoenix3D\P3D_Wallpaper_Carpet_and_CurtainFabric_Materials_Pack\Scripts\MaterialSwithcer.cs" />
-    <Compile Include="Assets\Phoenix3D\P3D_Wallpaper_Carpet_and_CurtainFabric_Materials_Pack\Scripts\OpenURL.cs" />
     <Compile Include="Assets\Scripts\Pinball\Obstacle.cs" />
     <Compile Include="Assets\Scripts\TCPCommunicationEX\TCPClientEx.cs" />
     <Compile Include="Assets\Scripts\Cinemachine\CinemachineManager.cs" />
+    <Compile Include="Assets\Phoenix3D\P3DPack\Scripts\MaterialSwithcer.cs" />
     <Compile Include="Assets\Scripts\Rotation\RotationManager.cs" />
     <Compile Include="Assets\Scripts\Pinball\Handle.cs" />
+    <Compile Include="Assets\Phoenix3D\P3DPack\Scripts\FlashText.cs" />
     <Compile Include="Assets\Scripts\BulletinBoardEx\BulletinBoardManager.cs" />
     <Compile Include="Assets\Scripts\Interior\LookRotate.cs" />
     <Compile Include="Assets\Bublisher\3D Stylized Animated Dogs Kit\Scripts\DemoController.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\Scripts\MPS\Cylinder.cs" />
-    <Compile Include="Assets\Phoenix3D\P3D_Wallpaper_Carpet_and_CurtainFabric_Materials_Pack\Scripts\FlashText.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

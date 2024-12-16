@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "582547305273",
+    "firebase_url": "https://mpsproject-97b4d-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mpsproject-97b4d",
+    "storage_bucket": "mpsproject-97b4d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582547305273:android:eab95d2a17340221f7aee8",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.MyFirstUnitySoftware"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPtEU9eSre6gNkhNYxwa8C6IpHelg5DJs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

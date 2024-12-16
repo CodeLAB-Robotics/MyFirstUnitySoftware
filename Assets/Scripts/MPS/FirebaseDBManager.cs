@@ -1,4 +1,4 @@
-﻿#define SlaveMode // 빌드시 MasterMode or SlaveMode로 코드를변환
+﻿#define MasterMode // 빌드시 MasterMode or SlaveMode로 코드를변환
 
 using System.Collections;
 using UnityEngine;
@@ -18,10 +18,15 @@ namespace MPS
     /// </summary>
     public class FirebaseDBManager : MonoBehaviour
     {
+        public static FirebaseDBManager Instance;
         public string dbURL;
         public MPSManager mPSManager;
         public float updateInterval = 1f;
         public float mPSCheckInterval = 1f;
+        public string xDevices;
+        public string yDevices;
+        public string dDevices;
+        public int yDeviceBlockSize = 2;
         string dataFormat = @"{
   ""EnergyConsumption"": [
     {
@@ -132,6 +137,19 @@ namespace MPS
 }";
         DatabaseReference dbRef;
         StringBuilder sb = new StringBuilder();
+        JObject totalData;
+
+        private void Awake()
+        {
+            if(Instance == null)
+                Instance = this;
+
+            for (int i = 0; i < yDeviceBlockSize; i++)
+            {
+                yDevices += "0000000000000000";
+            }
+        }
+
 
         private void Start()
         {
@@ -146,7 +164,9 @@ namespace MPS
 #elif SlaveMode
                 StartCoroutine(CoCheckMPSRunning());
 
-                DownloadData();
+                StartCoroutine(CoDownloadData());
+
+                //DownloadData();
 #endif
             }
 
@@ -186,11 +206,6 @@ namespace MPS
             }
         }
 
-        public void LoadData()
-        {
-
-        }
-
         IEnumerator CoUploadData()
         {
             yield return new WaitUntil(() => mPSManager.isRunning);
@@ -224,7 +239,8 @@ namespace MPS
                       $"{JsonConvert.SerializeObject(mPSManager.palletizingLines[1])}],");
             sb.Append($"\"Inventory\":[{JsonConvert.SerializeObject(mPSManager.inventory)}],");
             sb.Append($"\"EnergyConsumption\":[{JsonConvert.SerializeObject(mPSManager.energyConsumption)}],");
-            sb.Append($"\"EnvironmentData\":[{JsonConvert.SerializeObject(mPSManager.environmentData)}]}}");
+            sb.Append($"\"EnvironmentData\":[{JsonConvert.SerializeObject(mPSManager.environmentData)}],");
+            sb.Append($"\"yDevices\":\"{MxComponent.Instance.yDevices}\"}}");
 
             string json = sb.ToString();
             print(json);
@@ -244,7 +260,7 @@ namespace MPS
 
             while (mPSManager.isRunning)
             {
-                DownloadData();
+                yDevices = (string)totalData["yDevices"];
 
                 yield return new WaitForSeconds(updateInterval);
             }
@@ -282,7 +298,7 @@ namespace MPS
 
                         string json = snapshot.GetRawJsonValue();
 
-                        JObject totalData = JObject.Parse(json);
+                        totalData = JObject.Parse(json);
 
                         mPSManager.isRunning = (bool)totalData["isRunning"];
 

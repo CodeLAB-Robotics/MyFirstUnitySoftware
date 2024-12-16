@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 
 /// <summary>
 /// 센서1이 감지되면, 버튼을 눌렀을 때 Pusher1, 2, 3이 순차적으로 작동하고

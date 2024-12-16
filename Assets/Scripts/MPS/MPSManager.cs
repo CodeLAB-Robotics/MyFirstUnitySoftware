@@ -1,9 +1,10 @@
-﻿#define MxComponentVersion // MxComponentVersion or TCPServerVersion
-
+﻿// Master에서만 사용하는 전처리기
+#define MxComponentVersion // MxComponentVersion or TCPServerVersion or SlaveMode
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FirebaseDBManager = MPS.FirebaseDBManager;
 
 namespace MPS
 {
@@ -151,8 +152,9 @@ namespace MPS
             UpdateXDevices();
             UpdateDDevices();
 
+#if MxComponentVersion || TCPServerVersion
             UpdateDBData(); // MPS 설비의 정보를 최신화(DB에 들어갈 내용을 업데이트)
-
+#endif
             void UpdateYDevices()
             {
 #if MxComponentVersion
@@ -203,6 +205,29 @@ namespace MPS
                 int 로봇A오리진     = TCPClient.Instance.yDevices[15] - '0';       // Y0F
                 int 로봇B싱글사이클 = TCPClient.Instance.yDevices[16] - '0';   // Y10
                 int 로봇B오리진     = TCPClient.Instance.yDevices[17] - '0';       // Y11
+
+#elif SlaveMode
+                if (isRunning == false)
+                    return;
+
+                int 공급실린더전진  = FirebaseDBManager.Instance.yDevices[0]  - '0';
+                int 공급실린더후진  = FirebaseDBManager.Instance.yDevices[1]  - '0';
+                int 가공실린더전진  = FirebaseDBManager.Instance.yDevices[2]  - '0';
+                int 가공실린더후진  = FirebaseDBManager.Instance.yDevices[3]  - '0';
+                int 송출실린더전진  = FirebaseDBManager.Instance.yDevices[4]  - '0';
+                int 송출실린더후진  = FirebaseDBManager.Instance.yDevices[5]  - '0';
+                int 배출실린더전진  = FirebaseDBManager.Instance.yDevices[6]  - '0';
+                int 배출실린더후진  = FirebaseDBManager.Instance.yDevices[7]  - '0';
+                int 컨베이어CW회전  = FirebaseDBManager.Instance.yDevices[8]  - '0';
+                int 컨베이어CCW회전 = FirebaseDBManager.Instance.yDevices[9]  - '0';
+                int 컨베이어STOP    = FirebaseDBManager.Instance.yDevices[10] - '0';
+                int 빨강램프        = FirebaseDBManager.Instance.yDevices[11] - '0';
+                int 노랑램프        = FirebaseDBManager.Instance.yDevices[12] - '0';
+                int 초록램프        = FirebaseDBManager.Instance.yDevices[13] - '0';
+                int 로봇A싱글사이클 = FirebaseDBManager.Instance.yDevices[14] - '0';   // Y0E
+                int 로봇A오리진     = FirebaseDBManager.Instance.yDevices[15] - '0';   // Y0F
+                int 로봇B싱글사이클 = FirebaseDBManager.Instance.yDevices[16] - '0';   // Y10
+                int 로봇B오리진     = FirebaseDBManager.Instance.yDevices[17] - '0';   // Y11
 #endif
 
                 if (공급실린더전진 == 1) cylinders[0].OnForwardBtnClkEvent();
