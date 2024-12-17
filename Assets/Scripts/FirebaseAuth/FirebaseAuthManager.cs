@@ -17,8 +17,11 @@ public class FirebaseAuthManager : MonoBehaviour
 {
     [Header("로그인 UI")]
     [SerializeField] GameObject loginPanel;
+    [SerializeField] GameObject iDInfoPanel;
     [SerializeField] TMP_InputField loginEmailInput;
     [SerializeField] TMP_InputField loginPWInput;
+    [SerializeField] TMP_InputField emailInput;
+    [SerializeField] TMP_InputField nameInput;
     [SerializeField] string dbURL;
     [SerializeField] string uID;
 
@@ -103,7 +106,6 @@ public class FirebaseAuthManager : MonoBehaviour
 
         user = logInTask.Result.User;
 
-
         if (!user.IsEmailVerified)
         {
             print("이메일의 인증코드를 확인해 주세요.");
@@ -131,13 +133,13 @@ public class FirebaseAuthManager : MonoBehaviour
         // 다른 씬 불러오기
         //AsyncOperation oper = SceneManager.LoadSceneAsync("MPSwithTCPClient");
 
-        //while(!oper.isDone)
+        //while (!oper.isDone)
         //{
         //    print(oper.progress + "%");
 
         //    yield return null;
         //}
-        
+
         //yield return new WaitUntil(() => oper.isDone);
 
         //print("Load가 완료되었습니다.");
@@ -150,7 +152,7 @@ public class FirebaseAuthManager : MonoBehaviour
         public string name;
     }
     [SerializeField] User userInfo;
-
+    bool isDataDownloaded = false;
     private void DownloadMyDBInfo(string uID)
     {
         DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("users");
@@ -164,7 +166,68 @@ public class FirebaseAuthManager : MonoBehaviour
             print(json);
 
             userInfo = JsonUtility.FromJson<User>(json);
+
+            // Refactoring: 코드정리
+            if (task.IsCanceled)
+            {
+                print("데이터 다운로드 취소");
+            }
+            else if (task.IsFaulted)
+            {
+                print("데이터 다운로드 실패");
+            }
+            else if (task.IsCompleted)
+            {
+                isDataDownloaded = true;
+
+                print("데이터 다운로드 완료");
+            }
         });
+
+        StartCoroutine("CoUpdateIDInfo");
+    }
+
+    IEnumerator CoUpdateIDInfo()
+    {
+        yield return new WaitUntil(() => isDataDownloaded);
+
+        emailInput.text = userInfo.email;
+        nameInput.text = userInfo.name;
+
+        loginPanel.SetActive(false);
+        iDInfoPanel.SetActive(true);
+    }
+
+    public void OnEditBtnClkEvent()
+    {
+        userInfo.email = emailInput.text;
+        userInfo.name = nameInput.text;
+
+        UploadMyDBInfo(uID, userInfo);
+    }
+
+    bool isTaskDone = false;
+    private void UploadMyDBInfo(string uID, User info)
+    {
+        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("users");
+
+        string json = JsonUtility.ToJson(info);
+        dbRef.Child(uID).SetRawJsonValueAsync(json).ContinueWith(task =>
+        {
+            if (task.IsCompleted)
+            {
+                isTaskDone = true;
+            }
+        });
+
+        StartCoroutine("CoEditDone");
+    }
+
+    IEnumerator CoEditDone()
+    {
+        yield return new WaitUntil(() => isTaskDone);
+
+        print("수정 완료");
     }
 
     public void OnSignupBtnClkEvent()
