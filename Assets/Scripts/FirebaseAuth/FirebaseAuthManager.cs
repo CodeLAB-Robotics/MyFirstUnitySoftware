@@ -2,10 +2,10 @@ using TMPro;
 using UnityEngine;
 using Firebase;
 using Firebase.Auth;
+using Firebase.Database;
 using System.Collections;
 using System.Threading.Tasks;
 using System;
-using System.Net.Mail;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -19,6 +19,8 @@ public class FirebaseAuthManager : MonoBehaviour
     [SerializeField] GameObject loginPanel;
     [SerializeField] TMP_InputField loginEmailInput;
     [SerializeField] TMP_InputField loginPWInput;
+    [SerializeField] string dbURL;
+    [SerializeField] string uID;
 
     [Header("회원가입 UI")]
     [SerializeField] GameObject signUpPanel;
@@ -37,6 +39,8 @@ public class FirebaseAuthManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        FirebaseApp.DefaultInstance.Options.DatabaseUrl = new System.Uri(dbURL);
+
         auth = FirebaseAuth.DefaultInstance;
 
         auth.StateChanged += AuthStateChangedEvent;
@@ -99,6 +103,7 @@ public class FirebaseAuthManager : MonoBehaviour
 
         user = logInTask.Result.User;
 
+
         if (!user.IsEmailVerified)
         {
             print("이메일의 인증코드를 확인해 주세요.");
@@ -116,22 +121,50 @@ public class FirebaseAuthManager : MonoBehaviour
 
         print("로그인 되었습니다.");
 
+        uID = user.UserId;
+
+        DownloadMyDBInfo(uID);
+
         loginEmailInput.text = "";
         loginPWInput.text = "";
 
         // 다른 씬 불러오기
-        AsyncOperation oper = SceneManager.LoadSceneAsync("MPSwithTCPClient");
+        //AsyncOperation oper = SceneManager.LoadSceneAsync("MPSwithTCPClient");
 
-        while(!oper.isDone)
-        {
-            print(oper.progress + "%");
+        //while(!oper.isDone)
+        //{
+        //    print(oper.progress + "%");
 
-            yield return null;
-        }
+        //    yield return null;
+        //}
         
-        yield return new WaitUntil(() => oper.isDone);
+        //yield return new WaitUntil(() => oper.isDone);
 
-        print("Load가 완료되었습니다.");
+        //print("Load가 완료되었습니다.");
+    }
+
+    [Serializable]
+    public class User
+    {
+        public string email;
+        public string name;
+    }
+    [SerializeField] User userInfo;
+
+    private void DownloadMyDBInfo(string uID)
+    {
+        DatabaseReference dbRef = FirebaseDatabase.DefaultInstance.GetReference("users");
+
+        dbRef.Child(uID).GetValueAsync().ContinueWith(task =>
+        {
+            DataSnapshot snapshot = task.Result;
+
+            string json = snapshot.GetRawJsonValue();
+
+            print(json);
+
+            userInfo = JsonUtility.FromJson<User>(json);
+        });
     }
 
     public void OnSignupBtnClkEvent()

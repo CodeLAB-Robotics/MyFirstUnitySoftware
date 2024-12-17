@@ -475,12 +475,17 @@ MonoBehaviour:
   loginPanel: {fileID: 2002658041}
   loginEmailInput: {fileID: 408820332}
   loginPWInput: {fileID: 1531804192}
+  dbURL: https://mpsproject-97b4d-default-rtdb.asia-southeast1.firebasedatabase.app/
+  uID: 
   signUpPanel: {fileID: 263675622}
   verificationPanel: {fileID: 856111999}
   signUpEmailInput: {fileID: 1411903748}
   signUpPWInput: {fileID: 576187188}
   signUpPWCheckInput: {fileID: 1130104051}
   verificationTxt: {fileID: 1976770345}
+  userInfo:
+    email: 
+    name: 
 --- !u!4 &65771912
 Transform:
   m_ObjectHideFlags: 0
