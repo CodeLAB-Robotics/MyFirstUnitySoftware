@@ -194,8 +194,8 @@ public class FirebaseAuthManager : MonoBehaviour
         emailInput.text = userInfo.email;
         nameInput.text = userInfo.name;
 
-        loginPanel.SetActive(false);
         iDInfoPanel.SetActive(true);
+        loginPanel.SetActive(false);
     }
 
     public void OnEditBtnClkEvent()
@@ -232,8 +232,8 @@ public class FirebaseAuthManager : MonoBehaviour
 
     public void OnSignupBtnClkEvent()
     {
-        loginPanel.SetActive(false);
         signUpPanel.SetActive(true);
+        loginPanel.SetActive(false);
 
         loginEmailInput.text = "";
         loginPWInput.text = "";
@@ -291,7 +291,6 @@ public class FirebaseAuthManager : MonoBehaviour
                     print(authError);
                     break;
             }
-
 
             if(task.IsCanceled)
             {
